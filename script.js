@@ -7,8 +7,8 @@ function setupGridStyles(map) {
   const gridWidth = map.width;
   const gridHeight = map.height;
 
-  const maxWidth = grid.clientWidth;
-  const maxHeight = grid.clientHeight;
+  const maxWidth = grid.clientWidth * 0.9;
+  const maxHeight = grid.clientHeight * 0.9;
 
   const cellWidth = Math.floor(maxWidth / gridWidth);
   const cellHeight = Math.floor(maxHeight / gridHeight);
