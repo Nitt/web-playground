@@ -11,7 +11,20 @@ const likelihoods = {
 
 export function createPuzzle(width, height) {
   const map = initMap(width, height);
-  placeStart(map);
+  const startPosition = placeStart(map);
+
+  /*let branchPoints = [startPosition];
+
+  while (branchPoints.length > 0) {
+    const current = branchPoints.shift();
+    // left:
+    while (canGoLeft(current)) {
+      
+    }
+    // up:
+    // right:
+    // down:
+  }*/
 
   for (let i = 0; i < map.cells.length; i++) {
 
@@ -43,7 +56,16 @@ function placeStart(map) {
     x: Math.floor(Math.random()*map.width),
     y: Math.floor(Math.random()*map.height)
   };
-  const startIndex = startPosition.y * map.width + startPosition.x;
+  const startIndex = getIndex(map, startPosition);
 
   map.cells[startIndex] = CellType.START;
+  return startPosition;
 }
+
+function getIndex(map, {x, y}) {
+  return y * map.width + x;
+}
+
+/*function canGoDirection(map, direction, position) {
+  
+}*/
