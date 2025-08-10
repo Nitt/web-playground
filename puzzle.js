@@ -30,11 +30,12 @@ export function createPuzzle(width, height) {
 }
 
 function initMap(width, height) {
-  return {
-    width = width,
-    height = height,
-    cells = new Array(width * height).fill(CellType.UNTOUCHED);
+  const map = {
+    width,
+    height,
+    cells: new Array(width * height).fill(CellType.UNTOUCHED)
   };
+  return map;
 }
 
 function placeStart(map) {
