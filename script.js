@@ -35,7 +35,7 @@ function createGridData(map) {
 }
 
 function createPuzzle(width, height) {
-  let map;
+  let map = {};
   map.width = width;
   map.height = height;
   return map;
