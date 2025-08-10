@@ -127,8 +127,12 @@ function goDirection(dirKey, pos) {
       addBranchPoint(pos);
     }
   } else if (nextCell === CellType.EMPTY) {
-    goDirection(dirKey, nextPos);
+    // Prevent infinite loops by checking if direction visited from nextPos
+    if (!hasVisitedDirection(nextIndex, dirKey)) {
+      goDirection(dirKey, nextPos);
+    }
   } else {
     addBranchPoint(pos);
   }
 }
+
