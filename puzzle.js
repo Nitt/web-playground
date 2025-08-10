@@ -19,20 +19,26 @@ const Likelihoods = {
 let map;
 let branchPoints;
 
+// We'll keep track of visited directions per cell by storing a bitmask or a Set
+// Here, let's use a Map with keys as cell index, values as Set of direction names visited
+const visitedDirs = new Map();
+
 export function createPuzzle(width, height) {
   map = initMap(width, height);
+  visitedDirs.clear();
+
   const startPosition = placeStart();
 
   branchPoints = [startPosition];
 
   while (branchPoints.length > 0) {
     const current = branchPoints.shift();
-    goDirection(Dirs.LEFT, current);
-    goDirection(Dirs.UP, current);
-    goDirection(Dirs.RIGHT, current);
-    goDirection(Dirs.DOWN, current);
+
+    for (const dirKey of Object.keys(Dirs)) {
+      goDirection(dirKey, current);
+    }
   }
-  
+
   return map;
 }
 
@@ -70,13 +76,25 @@ function placeCellTypeIfNeeded(index) {
 }
 
 function addBranchPoint(pos) {
-  // Prevent duplicates:
   if (!branchPoints.some(bp => bp.x === pos.x && bp.y === pos.y)) {
     branchPoints.push(pos);
   }
 }
 
-function goDirection(dir, pos) {
+function hasVisitedDirection(index, dirKey) {
+  const set = visitedDirs.get(index);
+  return set ? set.has(dirKey) : false;
+}
+
+function markVisitedDirection(index, dirKey) {
+  if (!visitedDirs.has(index)) {
+    visitedDirs.set(index, new Set());
+  }
+  visitedDirs.get(index).add(dirKey);
+}
+
+function goDirection(dirKey, pos) {
+  const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
 
   // Check boundaries
@@ -88,6 +106,15 @@ function goDirection(dir, pos) {
     return;
   }
 
+  const currentIndex = getIndex(pos);
+
+  // If we've already tried going in this direction from this cell, skip
+  if (hasVisitedDirection(currentIndex, dirKey)) {
+    return;
+  }
+
+  markVisitedDirection(currentIndex, dirKey);
+
   const nextIndex = getIndex(nextPos);
   const nextCell = map.cells[nextIndex];
 
@@ -95,12 +122,12 @@ function goDirection(dir, pos) {
     const placedType = placeCellTypeIfNeeded(nextIndex);
 
     if (placedType !== CellType.BLOCK) {
-      goDirection(dir, nextPos);
+      goDirection(dirKey, nextPos);
     } else {
       addBranchPoint(pos);
     }
   } else if (nextCell === CellType.EMPTY) {
-    goDirection(dir, nextPos);
+    goDirection(dirKey, nextPos);
   } else {
     addBranchPoint(pos);
   }
