@@ -40,8 +40,8 @@ function initMap(width, height) {
 
 function placeStart(map) {
   const startPosition = {
-    x = Math.floor(Math.random()*map.width),
-    y = Math.floor(Math.random()*map.height)
+    x: Math.floor(Math.random()*map.width),
+    y: Math.floor(Math.random()*map.height)
   };
   const startIndex = startPosition.y * map.width + startPosition.x;
 
