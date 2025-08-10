@@ -1,22 +1,27 @@
-body {
+body, html {
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
-  background: #eee;
+  font-family: sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 10px;
+  background: #f0f0f0;
+  box-sizing: border-box;
 }
 
 .grid {
+  flex-grow: 1;
   display: grid;
   gap: 2px;
   background: white;
   border: 1px solid #ccc;
-}
-
-.cell {
-  background: #fafafa;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  user-select: none;
+  padding: 10px;
+  overflow: auto;
 }
