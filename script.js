@@ -1,3 +1,5 @@
+import puzzle from './puzzle.js';
+
 const grid = document.querySelector('.grid');
 const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
@@ -47,7 +49,7 @@ function visualiseMap(map) {
 }
 
 function createMap(width, height) {
-  const map = createPuzzle(width, height);
+  const map = puzzle.createPuzzle(width, height);
   visualiseMap(map);
   return map;
 }
