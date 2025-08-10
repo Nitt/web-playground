@@ -5,6 +5,7 @@ body, html {
 }
 
 .container {
+  overflow: hidden;
   display: flex;
   height: 100%;
 }
@@ -17,6 +18,7 @@ body, html {
 }
 
 .grid {
+  box-sizing: border-box;
   flex-grow: 1;
   display: grid;
   gap: 2px;
@@ -30,4 +32,5 @@ body, html {
   background-color: #ddd;
   border: 1px solid #aaa;
   box-sizing: border-box; /* so border doesn’t increase size */
+  border-radius: 25%;
 }
