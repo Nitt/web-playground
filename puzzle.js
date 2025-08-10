@@ -1,4 +1,4 @@
-const CellType = {
+export const CellType = {
   EMPTY: 0,
   BLOCK: 1,
   SPECIAL: 2,
@@ -9,7 +9,7 @@ const likelihoods = {
   special: 0.05
 }
 
-function createPuzzle(width, height) {
+export function createPuzzle(width, height) {
   const map = {};
   map.width = width;
   map.height = height;
