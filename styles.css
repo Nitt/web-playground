@@ -28,22 +28,27 @@ body, html {
 }
 
 .cell {
-  background-color: #dad;
+  background-color: #ddd;
   border: 1px solid #aaa;
   border-radius: 8%;
 }
 
-.cell.empty {
+.cell.UNTOUCHED {
+  background-color: #dad;
+  border-color: #ccc;
+}
+
+.cell.EMPTY {
   background-color: #eee;
   border-color: #ccc;
 }
 
-.cell.block {
+.cell.BLOCK {
   background-color: #555;
   border-color: #333;
 }
 
-.cell.start {
+.cell.START {
   background-color: #f90;
   border-color: #c60;
   color: white;
