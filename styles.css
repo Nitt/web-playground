@@ -28,7 +28,7 @@ body, html {
 }
 
 .cell {
-  background-color: #ddd;
+  background-color: #dad;
   border: 1px solid #aaa;
   box-sizing: border-box; /* so border doesn’t increase size */
   border-radius: 8%;
