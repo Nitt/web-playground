@@ -7,7 +7,20 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="grid"></div>
+  <div class="container">
+    <div class="sidebar">
+      <label>
+        Width: <input type="number" id="widthInput" min="1" value="10" />
+      </label>
+      <br />
+      <label>
+        Height: <input type="number" id="heightInput" min="1" value="10" />
+      </label>
+      <br />
+      <button id="generateBtn">Generate</button>
+    </div>
+    <div class="grid"></div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
