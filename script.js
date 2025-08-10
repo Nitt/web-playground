@@ -5,6 +5,11 @@ const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 
+const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
+  acc[CellType[key]] = key;
+  return acc;
+}, {});
+
 function setupGridStyles(map) {
   const gridWidth = map.width;
   const gridHeight = map.height;
@@ -37,15 +42,7 @@ function createGridData(map) {
     cell.classList.add('cell');
 
     const value = map.cells[i];
-    if (value === CellType.UNTOUCHED) {
-      cell.classList.add('untouched');
-    } else if (value === CellType.EMPTY) {
-      cell.classList.add('empty');
-    } else if (value === CellType.START) {
-      cell.classList.add('start');
-    } else if (value === CellType.BLOCK) {
-      cell.classList.add('block');
-    }
+    cell.classList.add('cell', CellTypeClass[value]);
 
     grid.appendChild(cell);
   }
