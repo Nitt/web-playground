@@ -1,32 +1,48 @@
 export const CellType = {
-  EMPTY: 0,
-  BLOCK: 1,
-  SPECIAL: 2,
+  UNTOUCHED: 0,
+  EMPTY: 1,
+  START: 2,
+  BLOCK: 3,
 };
 
 const likelihoods = {
   block: 0.2,
-  special: 0.05
 }
 
 export function createPuzzle(width, height) {
-  const map = {};
-  map.width = width;
-  map.height = height;
-  map.cells = new Array(width * height).fill(CellType.EMPTY);
+  const map = initMap(width, height);
+  placeStart(map);
 
   for (let i = 0; i < map.cells.length; i++) {
+
+    if (map.cells[i] != CellType.UNTOUCHED) continue;
 
     if (Math.random() < likelihoods.block) {
       map.cells[i] = CellType.BLOCK;
       continue;
     }
 
-    if (Math.random() < likelihoods.special) {
-      map.cells[i] = CellType.SPECIAL;
-      continue;
-    }
+    map.cells[i] = CellType.EMPTY;
+    
   }
   
   return map;
+}
+
+function initMap(width, height) {
+  return {
+    width = width,
+    height = height,
+    cells = new Array(width * height).fill(CellType.UNTOUCHED);
+  };
+}
+
+function placeStart(map) {
+  const startPosition = {
+    x = Math.floor(Math.random()*map.width),
+    y = Math.floor(Math.random()*map.height)
+  };
+  const startIndex = startPosition.y * map.width + startPosition.x;
+
+  map.cells[startIndex] = CellType.START;
 }
