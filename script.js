@@ -39,6 +39,7 @@ function createGridData(map) {
     const value = map.cells[i];
     if (value === CellType.UNTOUCHED) {
       cell.classList.add('untouched');
+    }
     else if (value === CellType.EMPTY) {
       cell.classList.add('empty');
     } else if (value === CellType.START) {
