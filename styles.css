@@ -30,25 +30,21 @@ body, html {
 .cell {
   background-color: #dad;
   border: 1px solid #aaa;
-  box-sizing: border-box; /* so border doesn’t increase size */
   border-radius: 8%;
 }
 
-/* Empty cells — maybe a lighter background */
 .cell.empty {
   background-color: #eee;
   border-color: #ccc;
 }
 
-/* Block cells — darker, maybe */
 .cell.block {
   background-color: #555;
   border-color: #333;
 }
 
-/* Special cells — standout color */
-.cell.special {
+.cell.start {
   background-color: #f90;
   border-color: #c60;
-  color: white; /* in case you add text */
+  color: white;
 }
