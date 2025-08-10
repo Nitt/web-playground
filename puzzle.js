@@ -23,7 +23,7 @@ let branchPoints;
 // Here, let's use a Map with keys as cell index, values as Set of direction names visited
 const visitedDirs = new Map();
 
-const counterMax = 10;
+const counterMax = 1000;
 let counter = 0;
 
 export function createPuzzle(width, height) {
