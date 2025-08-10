@@ -6,7 +6,7 @@ const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
-  acc[CellType[key]] = key.toLowerCase(); // safer for CSS class naming
+  acc[CellType[key]] = key;
   return acc;
 }, {});
 
