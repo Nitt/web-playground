@@ -1,4 +1,4 @@
-import puzzle from './puzzle.js';
+import { createPuzzle, CellType } from './puzzle.js';
 
 const grid = document.querySelector('.grid');
 const widthInput = document.getElementById('widthInput');
@@ -37,11 +37,11 @@ function createGridData(map) {
     cell.classList.add('cell');
 
     const value = map.cells[i];
-    if (value === 0) {
+    if (value === CellType.EMPTY) {
       cell.classList.add('empty');
-    } else if (value === 1) {
+    } else if (value === CellType.BLOCK) {
       cell.classList.add('block');
-    } else if (value === 2) {
+    } else if (value === CellType.SPECIAL) {
       cell.classList.add('special');
     }
 
@@ -59,7 +59,7 @@ function visualiseMap(map) {
 }
 
 function createMap(width, height) {
-  const map = puzzle.createPuzzle(width, height);
+  const map = createPuzzle(width, height);
   visualiseMap(map);
   return map;
 }
