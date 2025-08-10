@@ -49,10 +49,6 @@ function createGridData(map) {
   }
 }
 
-function createPuzzle(width, height) {
-  return { width, height };
-}
-
 function visualiseMap(map) {
   createGridData(map);
   setupGridStyles(map);
