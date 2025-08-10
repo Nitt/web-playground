@@ -37,12 +37,14 @@ function createGridData(map) {
     cell.classList.add('cell');
 
     const value = map.cells[i];
-    if (value === CellType.EMPTY) {
+    if (value === CellType.UNTOUCHED) {
+      cell.classList.add('untouched');
+    else if (value === CellType.EMPTY) {
       cell.classList.add('empty');
+    } else if (value === CellType.START) {
+      cell.classList.add('start');
     } else if (value === CellType.BLOCK) {
       cell.classList.add('block');
-    } else if (value === CellType.SPECIAL) {
-      cell.classList.add('special');
     }
 
     grid.appendChild(cell);
