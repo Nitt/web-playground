@@ -35,6 +35,16 @@ function createGridData(map) {
   for (let i = 0; i < width * height; i++) {
     const cell = document.createElement('div');
     cell.classList.add('cell');
+
+    const value = map.cells[i];
+    if (value === 0) {
+      cell.classList.add('empty');
+    } else if (value === 1) {
+      cell.classList.add('block');
+    } else if (value === 2) {
+      cell.classList.add('special');
+    }
+
     grid.appendChild(cell);
   }
 }
