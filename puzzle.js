@@ -5,41 +5,34 @@ export const CellType = {
   BLOCK: 3,
 };
 
-const Dirs = [
-  { name: 'LEFT',  x: -1, y:  0 },
-  { name: 'UP',    x:  0, y:  1 },
-  { name: 'RIGHT', x:  1, y:  0 },
-  { name: 'DOWN',  x:  0, y: -1 },
-];
+const Dirs = {
+  LEFT:  { x: -1,  y:  0 },
+  UP:    { x:  0,  y:  1 },
+  RIGHT: { x:  1,  y:  0 },
+  DOWN:  { x:  0,  y: -1 },
+};
 
 const Likelihoods = {
   block: 0.2,
 };
 
 let map;
-let branchPoints = [];
-const visitedBranchPoints = new Set();
-
-function posToKey(pos) {
-  return `${pos.x},${pos.y}`;
-}
+let branchPoints;
 
 export function createPuzzle(width, height) {
   map = initMap(width, height);
-  const startPosition = placeStart(map);
+  const startPosition = placeStart();
 
   branchPoints = [startPosition];
-  visitedBranchPoints.clear();
-  visitedBranchPoints.add(posToKey(startPosition));
 
   while (branchPoints.length > 0) {
     const current = branchPoints.shift();
-
-    for (const dir of Dirs) {
-      goDirection(dir, current);
-    }
+    goDirection(Dirs.LEFT, current);
+    goDirection(Dirs.UP, current);
+    goDirection(Dirs.RIGHT, current);
+    goDirection(Dirs.DOWN, current);
   }
-
+  
   return map;
 }
 
@@ -51,24 +44,34 @@ function initMap(width, height) {
   };
 }
 
-function placeStart(map) {
+function placeStart() {
   const startPosition = {
     x: Math.floor(Math.random() * map.width),
     y: Math.floor(Math.random() * map.height),
   };
-  const startIndex = getIndex(map, startPosition);
+  const startIndex = getIndex(startPosition);
   map.cells[startIndex] = CellType.START;
   return startPosition;
 }
 
-function getIndex(map, pos) {
+function getIndex(pos) {
   return pos.y * map.width + pos.x;
 }
 
+function placeCellTypeIfNeeded(index) {
+  const rand = Math.random();
+  if (rand < Likelihoods.block) {
+    map.cells[index] = CellType.BLOCK;
+    return CellType.BLOCK;
+  } else {
+    map.cells[index] = CellType.EMPTY;
+    return CellType.EMPTY;
+  }
+}
+
 function addBranchPoint(pos) {
-  const key = posToKey(pos);
-  if (!visitedBranchPoints.has(key)) {
-    visitedBranchPoints.add(key);
+  // Prevent duplicates:
+  if (!branchPoints.some(bp => bp.x === pos.x && bp.y === pos.y)) {
     branchPoints.push(pos);
   }
 }
@@ -78,26 +81,26 @@ function goDirection(dir, pos) {
 
   // Check boundaries
   if (
-    nextPos.x < 0 ||
-    nextPos.x >= map.width ||
-    nextPos.y < 0 ||
-    nextPos.y >= map.height
+    nextPos.x < 0 || nextPos.x >= map.width ||
+    nextPos.y < 0 || nextPos.y >= map.height
   ) {
     addBranchPoint(pos);
     return;
   }
 
-  const nextIndex = getIndex(map, nextPos);
+  const nextIndex = getIndex(nextPos);
+  const nextCell = map.cells[nextIndex];
 
-  if (map.cells[nextIndex] === CellType.UNTOUCHED) {
-    const placeBlock = Math.random() < Likelihoods.block;
-    map.cells[nextIndex] = placeBlock ? CellType.BLOCK : CellType.EMPTY;
+  if (nextCell === CellType.UNTOUCHED) {
+    const placedType = placeCellTypeIfNeeded(nextIndex);
 
-    if (!placeBlock) {
+    if (placedType !== CellType.BLOCK) {
       goDirection(dir, nextPos);
     } else {
       addBranchPoint(pos);
     }
+  } else if (nextCell === CellType.EMPTY) {
+    goDirection(dir, nextPos);
   } else {
     addBranchPoint(pos);
   }
