@@ -4,3 +4,7 @@ function createPuzzle(width, height) {
   map.height = height;
   return map;
 }
+
+export default {
+  createPuzzle
+};
