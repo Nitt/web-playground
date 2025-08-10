@@ -36,7 +36,7 @@ export function createPuzzle(width, height) {
 
   while (branchPoints.length > 0) {
     if (counter > counterMax) {
-      return;
+      return map;
     }
     const current = branchPoints.shift();
 
