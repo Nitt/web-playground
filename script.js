@@ -6,11 +6,13 @@ const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
-  acc[CellType[key]] = key;
+  acc[CellType[key]] = key.toLowerCase(); // safer for CSS class naming
   return acc;
 }, {});
 
 function setupGridStyles(map) {
+  if (!map) return;
+
   const gridWidth = map.width;
   const gridHeight = map.height;
 
@@ -32,6 +34,8 @@ function setupGridStyles(map) {
 }
 
 function createGridData(map) {
+  if (!map) return;
+
   const width = map.width;
   const height = map.height;
 
@@ -39,11 +43,8 @@ function createGridData(map) {
 
   for (let i = 0; i < width * height; i++) {
     const cell = document.createElement('div');
-    cell.classList.add('cell');
-
     const value = map.cells[i];
     cell.classList.add('cell', CellTypeClass[value]);
-
     grid.appendChild(cell);
   }
 }
@@ -59,19 +60,24 @@ function createMap(width, height) {
   return map;
 }
 
-let map = createMap(
-  parseInt(widthInput.value),
-  parseInt(heightInput.value)
-);
+// Use defaults if inputs invalid
+const initialWidth = parseInt(widthInput.value) || 10;
+const initialHeight = parseInt(heightInput.value) || 10;
+
+let map = createMap(initialWidth, initialHeight);
 
 generateBtn.addEventListener('click', () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
-  if (w > 0 && h > 0) {
+  if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
     map = createMap(w, h);
+  } else {
+    alert('Please enter valid positive integers for width and height.');
   }
 });
 
 window.addEventListener('resize', () => {
-  setupGridStyles(map);
+  if (map) {
+    setupGridStyles(map);
+  }
 });
