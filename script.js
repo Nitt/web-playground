@@ -1,23 +1,19 @@
 const grid = document.querySelector('.grid');
 
-// This handles the visual setup: sizes the cells based on container size & grid dimensions
-function setupGridStyles(gridWidth, gridHeight) {
-  // Calculate max available size (viewport minus some margin)
+function setupGridStyles(map) {
+  let gridWidth = map.width;
+  let gridHeight = map.height;
+  
   const maxWidth = window.innerWidth * 0.9;
   const maxHeight = window.innerHeight * 0.9;
 
-  // Calculate cell size to fit grid within max available space
   const cellWidth = Math.floor(maxWidth / gridWidth);
   const cellHeight = Math.floor(maxHeight / gridHeight);
+  const cellSize = Math.min(cellWidth, cellHeight); // keeps the size square
 
-  // Use the smaller dimension to keep cells square
-  const cellSize = Math.min(cellWidth, cellHeight);
-
-  // Set CSS grid styles
   grid.style.gridTemplateColumns = `repeat(${gridWidth}, ${cellSize}px)`;
   grid.style.gridTemplateRows = `repeat(${gridHeight}, ${cellSize}px)`;
 
-  // Update all existing cells size (if any)
   const cells = grid.querySelectorAll('.cell');
   cells.forEach(cell => {
     cell.style.width = `${cellSize}px`;
@@ -25,8 +21,10 @@ function setupGridStyles(gridWidth, gridHeight) {
   });
 }
 
-// This handles grid data: creates cells based on width & height
-function createGridData(width, height) {
+function createGridData(map) {
+  let width = map.width;
+  let height = map.height;
+  
   grid.innerHTML = ''; // clear existing cells
 
   for (let i = 0; i < width * height; i++) {
@@ -36,16 +34,25 @@ function createGridData(width, height) {
   }
 }
 
-// Main function to initialize grid
-function initGrid(width, height) {
-  createGridData(width, height);
-  setupGridStyles(width, height);
+function createPuzzle(width, height) {
+  let map;
+  map.width = width;
+  map.height = height;
 }
 
-// Initialize example grid
-initGrid(10, 10);
+function visualiseMap(map) {
+  createGridData(map);
+  setupGridStyles(map);
+}
 
-// Optional: adjust grid layout when window resizes
+function createMap(width, height) {
+  let map = createPuzzle(width, height);
+  visualiseMap(map);
+  return map;
+}
+
+let map = createMap(10, 10);
+
 window.addEventListener('resize', () => {
-  setupGridStyles(10, 10);
+  setupGridStyles(map);
 });
