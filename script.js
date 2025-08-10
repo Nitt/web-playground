@@ -1,15 +1,18 @@
 const grid = document.querySelector('.grid');
+const widthInput = document.getElementById('widthInput');
+const heightInput = document.getElementById('heightInput');
+const generateBtn = document.getElementById('generateBtn');
 
 function setupGridStyles(map) {
-  let gridWidth = map.width;
-  let gridHeight = map.height;
-  
-  const maxWidth = window.innerWidth * 0.9;
-  const maxHeight = window.innerHeight * 0.9;
+  const gridWidth = map.width;
+  const gridHeight = map.height;
+
+  const maxWidth = grid.clientWidth;
+  const maxHeight = grid.clientHeight;
 
   const cellWidth = Math.floor(maxWidth / gridWidth);
   const cellHeight = Math.floor(maxHeight / gridHeight);
-  const cellSize = Math.min(cellWidth, cellHeight); // keeps the size square
+  const cellSize = Math.min(cellWidth, cellHeight);
 
   grid.style.gridTemplateColumns = `repeat(${gridWidth}, ${cellSize}px)`;
   grid.style.gridTemplateRows = `repeat(${gridHeight}, ${cellSize}px)`;
@@ -22,10 +25,10 @@ function setupGridStyles(map) {
 }
 
 function createGridData(map) {
-  let width = map.width;
-  let height = map.height;
-  
-  grid.innerHTML = ''; // clear existing cells
+  const width = map.width;
+  const height = map.height;
+
+  grid.innerHTML = '';
 
   for (let i = 0; i < width * height; i++) {
     const cell = document.createElement('div');
@@ -35,10 +38,7 @@ function createGridData(map) {
 }
 
 function createPuzzle(width, height) {
-  let map = {};
-  map.width = width;
-  map.height = height;
-  return map;
+  return { width, height };
 }
 
 function visualiseMap(map) {
@@ -47,12 +47,23 @@ function visualiseMap(map) {
 }
 
 function createMap(width, height) {
-  let map = createPuzzle(width, height);
+  const map = createPuzzle(width, height);
   visualiseMap(map);
   return map;
 }
 
-let map = createMap(10, 10);
+let map = createMap(
+  parseInt(widthInput.value),
+  parseInt(heightInput.value)
+);
+
+generateBtn.addEventListener('click', () => {
+  const w = parseInt(widthInput.value);
+  const h = parseInt(heightInput.value);
+  if (w > 0 && h > 0) {
+    map = createMap(w, h);
+  }
+});
 
 window.addEventListener('resize', () => {
   setupGridStyles(map);
