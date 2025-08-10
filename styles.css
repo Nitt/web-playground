@@ -1,20 +1,22 @@
 body {
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
   background: #eee;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(10, 30px);
-  grid-template-rows: repeat(10, 30px);
   gap: 2px;
+  background: white;
+  border: 1px solid #ccc;
 }
 
 .cell {
-  background: white;
+  background: #fafafa;
   border: 1px solid #ccc;
+  box-sizing: border-box;
+  user-select: none;
 }
