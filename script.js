@@ -38,6 +38,7 @@ function createPuzzle(width, height) {
   let map;
   map.width = width;
   map.height = height;
+  return map;
 }
 
 function visualiseMap(map) {
