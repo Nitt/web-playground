@@ -25,3 +25,9 @@ body, html {
   padding: 10px;
   overflow: auto;
 }
+
+.cell {
+  background-color: #ddd;
+  border: 1px solid #aaa;
+  box-sizing: border-box; /* so border doesn’t increase size */
+}
