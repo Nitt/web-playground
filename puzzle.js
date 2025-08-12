@@ -23,7 +23,7 @@ let branchPoints;
 // Here, let's use a Map with keys as cell index, values as Set of direction names visited
 const visitedDirs = new Map();
 
-export function createPuzzle(width, height, { onStep } = {}) {
+export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   visitedDirs.clear();
 
@@ -34,7 +34,7 @@ export function createPuzzle(width, height, { onStep } = {}) {
     const current = branchPoints.shift();
 
     for (const dirKey of Object.keys(Dirs)) {
-      goDirection(dirKey, current, onStep);
+      await goDirection(dirKey, current, onStep);
     }
   }
 
@@ -96,8 +96,8 @@ function markVisitedDirection(index, dirKey) {
   visitedDirs.get(index).add(dirKey);
 }
 
-function goDirection(dirKey, pos, onStep) {
-  if (onStep) onStep(map);
+async function goDirection(dirKey, pos, onStep) {
+  if (onStep) await onStep(map);
   
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
@@ -127,14 +127,14 @@ function goDirection(dirKey, pos, onStep) {
     const placedType = placeCellTypeIfNeeded(nextIndex);
 
     if (placedType !== CellType.BLOCK) {
-      goDirection(dirKey, nextPos);
+      await goDirection(dirKey, nextPos, onStep);
     } else {
       addBranchPoint(pos);
     }
   } else if (nextCell === CellType.EMPTY) {
     // Prevent infinite loops by checking if direction visited from nextPos
     if (!hasVisitedDirection(nextIndex, dirKey)) {
-      goDirection(dirKey, nextPos);
+      await goDirection(dirKey, nextPos, onStep);
     }
   } else {
     addBranchPoint(pos);
