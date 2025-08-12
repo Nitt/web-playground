@@ -1,8 +1,7 @@
 export const CellType = {
   UNTOUCHED: 0,
   EMPTY: 1,
-  START: 2,
-  BLOCK: 3,
+  BLOCK: 2,
 };
 
 const Dirs = {
@@ -41,11 +40,51 @@ export async function createPuzzle(width, height, { onStep } = {}) {
   return map;
 }
 
+async function goDirection(dirKey, pos, onStep) {
+  if (onStep) await onStep(map);
+  
+  const dir = Dirs[dirKey];
+  const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
+
+  const currentIndex = getIndex(pos);
+
+  if (hasVisitedDirection(currentIndex, dirKey)) return;
+  markVisitedDirection(currentIndex, dirKey);
+
+  // Check boundaries
+  if (
+    nextPos.x < 0 || nextPos.x >= map.width ||
+    nextPos.y < 0 || nextPos.y >= map.height
+  ) {
+    addBranchPoint(pos);
+    return;
+  }
+
+  const nextIndex = getIndex(nextPos);
+  const nextCell = map.cells[nextIndex];
+
+  if (nextCell === CellType.UNTOUCHED) {
+    const placedType = placeCellTypeIfNeeded(nextIndex);
+    if (placedType !== CellType.BLOCK) {
+      await goDirection(dirKey, nextPos, onStep);
+    } else {
+      addBranchPoint(pos);
+    }
+  } else if (nextCell === CellType.EMPTY) {
+    if (!hasVisitedDirection(nextIndex, dirKey)) {
+      await goDirection(dirKey, nextPos, onStep);
+    }
+  } else {
+    addBranchPoint(pos);
+  }
+}
+
 function initMap(width, height) {
   return {
     width,
     height,
     cells: new Array(width * height).fill(CellType.UNTOUCHED),
+    startPos: null,
   };
 }
 
@@ -55,7 +94,10 @@ function placeStart() {
     y: Math.floor(Math.random() * map.height),
   };
   const startIndex = getIndex(startPosition);
-  map.cells[startIndex] = CellType.START;
+
+  map.cells[startIndex] = CellType.EMPTY;
+  map.startPos = startPosition;
+
   return startPosition;
 }
 
@@ -93,49 +135,3 @@ function markVisitedDirection(index, dirKey) {
   }
   visitedDirs.get(index).add(dirKey);
 }
-
-async function goDirection(dirKey, pos, onStep) {
-  if (onStep) await onStep(map);
-  
-  const dir = Dirs[dirKey];
-  const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
-
-  const currentIndex = getIndex(pos);
-
-  // If we've already tried going in this direction from this cell, skip
-  if (hasVisitedDirection(currentIndex, dirKey)) {
-    return;
-  }
-
-  markVisitedDirection(currentIndex, dirKey);
-
-  // Check boundaries
-  if (
-    nextPos.x < 0 || nextPos.x >= map.width ||
-    nextPos.y < 0 || nextPos.y >= map.height
-  ) {
-    addBranchPoint(pos);
-    return;
-  }
-
-  const nextIndex = getIndex(nextPos);
-  const nextCell = map.cells[nextIndex];
-
-  if (nextCell === CellType.UNTOUCHED) {
-    const placedType = placeCellTypeIfNeeded(nextIndex);
-
-    if (placedType !== CellType.BLOCK) {
-      await goDirection(dirKey, nextPos, onStep);
-    } else {
-      addBranchPoint(pos);
-    }
-  } else if (nextCell === CellType.EMPTY) {
-    // Prevent infinite loops by checking if direction visited from nextPos
-    if (!hasVisitedDirection(nextIndex, dirKey)) {
-      await goDirection(dirKey, nextPos, onStep);
-    }
-  } else {
-    addBranchPoint(pos);
-  }
-}
-
