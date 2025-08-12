@@ -62,7 +62,7 @@ async function createMap(width, height) {
       ? async (map) => {
           visualiseMap(map);
           // Could slow it down with requestAnimationFrame or setTimeout
-          await new Promise(r => setTimeout(r, 50));
+          //await new Promise(r => setTimeout(r, 50));
         }
       : null
   });
