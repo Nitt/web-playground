@@ -18,13 +18,13 @@ const Likelihoods = {
 
 let map;
 let branchPoints;
-
-// We'll keep track of visited directions per cell by storing a bitmask or a Set
-// Here, let's use a Map with keys as cell index, values as Set of direction names visited
+const visitedBranchPositions = new Set();
 const visitedDirs = new Map();
 
 export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
+  branchPoints.length = 0;
+  visitedBranchPositions.clear();
   visitedDirs.clear();
 
   const startPosition = placeStart();
@@ -73,8 +73,6 @@ function placeCellTypeIfNeeded(index) {
     return CellType.EMPTY;
   }
 }
-
-const visitedBranchPositions = new Set();
 
 function addBranchPoint(pos) {
   const key = `${pos.x},${pos.y}`;
