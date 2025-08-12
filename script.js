@@ -73,12 +73,12 @@ async function createMap(width, height) {
   return map;
 }
 
-
-// Use defaults if inputs invalid
-const initialWidth = parseInt(widthInput.value) || 10;
-const initialHeight = parseInt(heightInput.value) || 10;
-
-let map = await createMap(initialWidth, initialHeight);
+let map;
+(async () => {
+  const initialWidth = parseInt(widthInput.value) || 10;
+  const initialHeight = parseInt(heightInput.value) || 10;
+  map = await createMap(initialWidth, initialHeight);
+})();
 
 generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
