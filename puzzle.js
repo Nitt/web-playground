@@ -107,15 +107,6 @@ function goDirection(dirKey, pos) {
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
 
-  // Check boundaries
-  if (
-    nextPos.x < 0 || nextPos.x >= map.width ||
-    nextPos.y < 0 || nextPos.y >= map.height
-  ) {
-    addBranchPoint(pos);
-    return;
-  }
-
   const currentIndex = getIndex(pos);
 
   // If we've already tried going in this direction from this cell, skip
@@ -124,6 +115,15 @@ function goDirection(dirKey, pos) {
   }
 
   markVisitedDirection(currentIndex, dirKey);
+
+  // Check boundaries
+  if (
+    nextPos.x < 0 || nextPos.x >= map.width ||
+    nextPos.y < 0 || nextPos.y >= map.height
+  ) {
+    addBranchPoint(pos);
+    return;
+  }
 
   const nextIndex = getIndex(nextPos);
   const nextCell = map.cells[nextIndex];
