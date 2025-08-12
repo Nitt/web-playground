@@ -54,12 +54,12 @@ function visualiseMap(map) {
   setupGridStyles(map);
 }
 
-function createMap(width, height) {
+async function createMap(width, height) {
   const stepMode = document.getElementById('debugStep').checked;
 
-  const map = createPuzzle(width, height, {
+  const map = await createPuzzle(width, height, {
     onStep: stepMode
-      ? (map) => {
+      ? async (map) => {
           visualiseMap(map);
           // Could slow it down with requestAnimationFrame or setTimeout
           await new Promise(r => setTimeout(r, 50));
@@ -78,13 +78,13 @@ function createMap(width, height) {
 const initialWidth = parseInt(widthInput.value) || 10;
 const initialHeight = parseInt(heightInput.value) || 10;
 
-let map = createMap(initialWidth, initialHeight);
+let map = await createMap(initialWidth, initialHeight);
 
-generateBtn.addEventListener('click', () => {
+generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
   if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
-    map = createMap(w, h);
+    map = await createMap(w, h);
   } else {
     alert('Please enter valid positive integers for width and height.');
   }
