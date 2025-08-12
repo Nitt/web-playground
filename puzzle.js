@@ -17,7 +17,7 @@ const Likelihoods = {
 };
 
 let map;
-let branchPoints;
+let branchPoints = [];
 const visitedBranchPositions = new Set();
 const visitedDirs = new Map();
 
