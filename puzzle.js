@@ -23,25 +23,18 @@ let branchPoints;
 // Here, let's use a Map with keys as cell index, values as Set of direction names visited
 const visitedDirs = new Map();
 
-//const counterMax = 1000;
-//let counter = 0;
-
-export function createPuzzle(width, height) {
+export function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   visitedDirs.clear();
 
   const startPosition = placeStart();
-
   branchPoints = [startPosition];
 
   while (branchPoints.length > 0) {
-    /*if (counter > counterMax) {
-      return map;
-    }*/
     const current = branchPoints.shift();
 
     for (const dirKey of Object.keys(Dirs)) {
-      goDirection(dirKey, current);
+      goDirection(dirKey, current, onStep);
     }
   }
 
@@ -103,11 +96,9 @@ function markVisitedDirection(index, dirKey) {
   visitedDirs.get(index).add(dirKey);
 }
 
-function goDirection(dirKey, pos) {
-  /*counter++;
-  if (counter > counterMax) {
-    return;
-  }*/
+function goDirection(dirKey, pos, onStep) {
+  if (onStep) onStep(map);
+  
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
 
