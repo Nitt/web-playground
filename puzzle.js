@@ -81,8 +81,12 @@ function placeCellTypeIfNeeded(index) {
   }
 }
 
+const visitedBranchPositions = new Set();
+
 function addBranchPoint(pos) {
-  if (!branchPoints.some(bp => bp.x === pos.x && bp.y === pos.y)) {
+  const key = `${pos.x},${pos.y}`;
+  if (!visitedBranchPositions.has(key)) {
+    visitedBranchPositions.add(key);
     branchPoints.push(pos);
   }
 }
