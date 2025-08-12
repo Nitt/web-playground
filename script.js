@@ -46,11 +46,15 @@ function createGridData(map) {
   for (let i = 0; i < width * height; i++) {
     const cell = document.createElement('div');
     const value = map.cells[i];
+    
+    cell.classList.add('cell');
+    
     if (i === startIndex) {
       cell.classList.add('START');
     } else {
       cell.classList.add(CellTypeClass[value]);
     }
+    
     grid.appendChild(cell);
   }
 }
