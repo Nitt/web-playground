@@ -55,12 +55,6 @@ function visualiseMap(map) {
 }
 
 function createMap(width, height) {
-  const map = createPuzzle(width, height);
-  visualiseMap(map);
-  return map;
-}
-
-function createMap(width, height) {
   const stepMode = document.getElementById('debugStep').checked;
 
   const map = createPuzzle(width, height, {
