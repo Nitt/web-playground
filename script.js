@@ -41,10 +41,16 @@ function createGridData(map) {
 
   grid.innerHTML = '';
 
+  const startIndex = map.startPos.y * map.width + map.startPos.x;
+  
   for (let i = 0; i < width * height; i++) {
     const cell = document.createElement('div');
     const value = map.cells[i];
-    cell.classList.add('cell', CellTypeClass[value]);
+    if (i === startIndex) {
+      cell.classList.add('START');
+    } else {
+      cell.classList.add(CellTypeClass[value]);
+    }
     grid.appendChild(cell);
   }
 }
