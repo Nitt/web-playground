@@ -60,6 +60,26 @@ function createMap(width, height) {
   return map;
 }
 
+function createMap(width, height) {
+  const stepMode = document.getElementById('debugStep').checked;
+
+  const map = createPuzzle(width, height, {
+    onStep: stepMode
+      ? (map) => {
+          visualiseMap(map);
+          // Could slow it down with requestAnimationFrame or setTimeout
+          // await new Promise(r => setTimeout(r, 50));
+        }
+      : null
+  });
+
+  if (!stepMode) {
+    visualiseMap(map);
+  }
+  return map;
+}
+
+
 // Use defaults if inputs invalid
 const initialWidth = parseInt(widthInput.value) || 10;
 const initialHeight = parseInt(heightInput.value) || 10;
