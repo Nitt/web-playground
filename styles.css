@@ -43,13 +43,28 @@ body, html {
   border-color: #ccc;
 }
 
+.cell.START {
+  background-color: #f90;
+  border-color: #c60;
+  color: white;
+}
+
+.cell.STICKY {
+  background-color: #9cf; /* light blue */
+  border-color: #6ab;
+}
+
 .cell.BLOCK {
   background-color: #555;
   border-color: #333;
 }
 
-.cell.START {
-  background-color: #f90;
-  border-color: #c60;
-  color: white;
+.cell.ONEWAY {
+  background-color: #fc9; /* light orange */
+  border-color: #e96;
+}
+
+.cell.TELEPORTER {
+  background-color: #c9f; /* purple-ish */
+  border-color: #96c;
 }
