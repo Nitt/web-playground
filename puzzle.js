@@ -57,15 +57,6 @@ async function goDirection(dirKey, pos, onStep) {
   if (hasVisitedDirection(currentIndex, dirKey)) return;
   markVisitedDirection(currentIndex, dirKey);
 
-  // Check boundaries
-  if (
-    nextPos.x < 0 || nextPos.x >= map.width ||
-    nextPos.y < 0 || nextPos.y >= map.height
-  ) {
-    addBranchPoint(pos);
-    return;
-  }
-
   const nextIndex = getIndex(nextPos);
   const nextCell = map.cells[nextIndex];
 
