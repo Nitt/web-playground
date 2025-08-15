@@ -1,7 +1,10 @@
 export const CellType = {
   UNTOUCHED: 0,
   EMPTY: 1,
-  BLOCK: 2,
+  STICKY: 2,
+  BLOCK: 3,
+  ONEWAY: 4,
+  TELEPORTER: 5,
 };
 
 const Dirs = {
@@ -12,7 +15,10 @@ const Dirs = {
 };
 
 const Likelihoods = {
-  block: 0.2,
+  sticky: 0.06,
+  block: 0.1,
+  oneway: 0.02,
+  teleporter: 0.01,
 };
 
 let map;
@@ -106,14 +112,20 @@ function getIndex(pos) {
 }
 
 function placeCellTypeIfNeeded(index) {
-  const rand = Math.random();
-  if (rand < Likelihoods.block) {
-    map.cells[index] = CellType.BLOCK;
-    return CellType.BLOCK;
-  } else {
-    map.cells[index] = CellType.EMPTY;
-    return CellType.EMPTY;
+  const total = Object.values(Likelihoods).reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+
+  for (const type in Likelihoods) {
+    if (r < Likelihoods[type]) {
+      // TODO: check legality of placing certain types here (oneways and teleporters)
+      map.cells[index] = CellType[type.toUpperCase()];
+      return CellType[type.toUpperCase()];
+    }
+    r -= Likelihoods[type];
   }
+  
+  map.cells[index] = CellType.EMPTY;
+  return CellType.EMPTY;
 }
 
 function addBranchPoint(pos) {
