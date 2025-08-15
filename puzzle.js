@@ -100,10 +100,14 @@ function initMap(width, height) {
 }
 
 function placeStart() {
+  const innerWidth = map.width - 2;
+  const innerHeight = map.height - 2;
+
   const startPosition = {
-    x: Math.floor(Math.random() * map.width),
-    y: Math.floor(Math.random() * map.height),
+    x: 1 + Math.floor(Math.random() * innerWidth),
+    y: 1 + Math.floor(Math.random() * innerHeight),
   };
+
   const startIndex = getIndex(startPosition);
 
   map.cells[startIndex] = CellType.EMPTY;
