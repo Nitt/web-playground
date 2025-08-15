@@ -19,6 +19,7 @@ const Likelihoods = {
   block: 0.1,
   oneway: 0.02,
   teleporter: 0.01,
+  empty: 1,
 };
 
 let map;
