@@ -86,10 +86,24 @@ async function goDirection(dirKey, pos, onStep) {
 }
 
 function initMap(width, height) {
+  const paddedWidth = width + 2;
+  const paddedHeight = height + 2;
+  const cells = new Array(paddedWidth * paddedHeight).fill(CellType.UNTOUCHED);
+
+  // Fill border with blockers
+  for (let x = 0; x < paddedWidth; x++) {
+    cells[x] = CellType.BLOCK; // top row
+    cells[(paddedHeight - 1) * paddedWidth + x] = CellType.BLOCK; // bottom row
+  }
+  for (let y = 0; y < paddedHeight; y++) {
+    cells[y * paddedWidth] = CellType.BLOCK; // left column
+    cells[y * paddedWidth + (paddedWidth - 1)] = CellType.BLOCK; // right column
+  }
+
   return {
-    width,
-    height,
-    cells: new Array(width * height).fill(CellType.UNTOUCHED),
+    width: paddedWidth,
+    height: paddedHeight,
+    cells,
     startPos: null,
   };
 }
