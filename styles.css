@@ -89,27 +89,62 @@ body, html {
 }
 
 /* arrows */
-.cell {
-  position: relative; /* make arrows positioned relative to the cell */
-}
-
+/* base arrow styles */
 .arrow {
   position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
   opacity: 0.2;
-  transform-origin: 50% 50%;
   transition: opacity 0.2s;
 }
 
+/* visited state */
 .arrow.visited {
   opacity: 1;
 }
 
-.arrow.up    { border-width: 0 10% 20% 10%; transform: translate(-50%, -50%) rotate(0deg); top: 20%; left: 50%; }
-.arrow.right { border-width: 0 10% 20% 10%; transform: translate(-50%, -50%) rotate(90deg); top: 50%; left: 80%; }
-.arrow.down  { border-width: 0 10% 20% 10%; transform: translate(-50%, -50%) rotate(180deg); top: 80%; left: 50%; }
-.arrow.left  { border-width: 0 10% 20% 10%; transform: translate(-50%, -50%) rotate(-90deg); top: 50%; left: 20%; }
+/* UP arrow */
+.arrow.up {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20% solid transparent;
+  border-right: 20% solid transparent;
+  border-bottom: 30% solid black; /* triangle pointing down visually makes an up arrow */
+}
 
+/* RIGHT arrow */
+.arrow.right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 20% solid transparent;
+  border-bottom: 20% solid transparent;
+  border-left: 30% solid black; /* points right */
+}
+
+/* DOWN arrow */
+.arrow.down {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20% solid transparent;
+  border-right: 20% solid transparent;
+  border-top: 30% solid black; /* points down */
+}
+
+/* LEFT arrow */
+.arrow.left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 20% solid transparent;
+  border-bottom: 20% solid transparent;
+  border-right: 30% solid black; /* points left */
+}
