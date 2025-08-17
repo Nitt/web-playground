@@ -64,6 +64,8 @@ function createGridData(map) {
 
         if (map.visitedDirs?.has(index) && map.visitedDirs.get(index).has(dir)) {
           arrow.classList.add('visited');
+        } else {
+          arrow.classList.remove('visited');
         }
 
         cell.appendChild(arrow);
