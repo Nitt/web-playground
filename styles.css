@@ -50,8 +50,14 @@ body, html {
 }
 
 .cell.STICKY {
-  background-color: #9cf; /* light blue */
-  border-color: #6ab;
+  background-color: #eee;
+  border-color: #ccc;
+  border-radius: 50%;
+  width: 30%;
+  height: 30%;
+  margin: auto;
+  background-clip: content-box; 
+  box-shadow: inset 0 0 0 4px orange;
 }
 
 .cell.BLOCK {
