@@ -57,6 +57,20 @@ function createGridData(map) {
         cell.classList.add(CellTypeClass[value]);
       }
 
+      // Add arrows for visited directions
+      const directions = ['up', 'right', 'down', 'left'];
+      directions.forEach(dir => {
+        const arrow = document.createElement('div');
+        arrow.classList.add('arrow', dir);
+  
+        // Check if this direction has been visited
+        if (map.visitedDirs?.[i]?.[dir]) {
+          arrow.classList.add('visited');
+        }
+  
+        cell.appendChild(arrow);
+      });
+
       grid.appendChild(cell);
     }
   }
