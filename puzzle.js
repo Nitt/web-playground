@@ -48,32 +48,60 @@ export async function createPuzzle(width, height, { onStep } = {}) {
 }
 
 async function goDirection(dirKey, pos, onStep) {
-  if (onStep) await onStep(map);
-  
+  if (onStep) {
+    await onStep(map);
+  }
+
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
 
   const currentIndex = getIndex(pos);
 
-  if (hasVisitedDirection(currentIndex, dirKey)) return;
+  if (hasVisitedDirection(currentIndex, dirKey)) {
+    return;
+  }
   markVisitedDirection(currentIndex, dirKey);
 
   const nextIndex = getIndex(nextPos);
   const nextCell = map.cells[nextIndex];
 
-  if (nextCell === CellType.UNTOUCHED) {
-    const placedType = placeCellTypeIfNeeded(nextIndex);
-    if (placedType !== CellType.BLOCK) {
-      await goDirection(dirKey, nextPos, onStep);
-    } else {
+  switch (nextCell) {
+    case CellType.UNTOUCHED: { // About to add new things!
+      const placedType = placeCellTypeIfNeeded(nextIndex);
+      switch (placedType) {
+        case CellType.EMPTY:
+        case CellType.ONEWAY:
+          await goDirection(dirKey, nextPos, onStep);
+          break;
+        case CellType.BLOCK:
+          addBranchPoint(pos);
+          break;
+        case CellType.STICKY:
+          addBranchPoint(nextPos);
+          break;
+      }
+      break;
+    }
+
+    case CellType.EMPTY:
+      if (!hasVisitedDirection(nextIndex, dirKey)) {
+        await goDirection(dirKey, nextPos, onStep);
+      }
+      break;
+
+    case CellType.BLOCK:
       addBranchPoint(pos);
-    }
-  } else if (nextCell === CellType.EMPTY) {
-    if (!hasVisitedDirection(nextIndex, dirKey)) {
-      await goDirection(dirKey, nextPos, onStep);
-    }
-  } else {
-    addBranchPoint(pos);
+      break;
+
+    case CellType.STICKY:
+      addBranchPoint(nextPos);
+      break;
+      
+    case CellType.ONEWAY:
+      // No need to check for passthrough direction since we only enter in that direction when placing it (here we're colliding with one already placed)
+      // We always place oneways in the directionality we're going when first placing so we just keep track of the "visitedDirs" value of the oneway cell
+      addBranchPoint(pos);
+      break;
   }
 }
 
