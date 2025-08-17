@@ -5,11 +5,13 @@ const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 
+// Map cell type values to class names
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
   acc[CellType[key]] = key;
   return acc;
 }, {});
 
+// Setup the CSS grid dimensions
 function setupGridStyles(map) {
   if (!map) return;
 
@@ -33,18 +35,15 @@ function setupGridStyles(map) {
   });
 }
 
+// Create all the grid cells and arrows
 function createGridData(map) {
   if (!map) return;
 
-  const innerWidth = map.width - 2;
-  const innerHeight = map.height - 2;
-
   grid.innerHTML = '';
-
   const startIndex = map.startPos.y * map.width + map.startPos.x;
 
-  for (let y = 1; y <= innerHeight; y++) {
-    for (let x = 1; x <= innerWidth; x++) {
+  for (let y = 1; y <= map.height - 2; y++) {
+    for (let x = 1; x <= map.width - 2; x++) {
       const index = y * map.width + x;
       const value = map.cells[index];
 
@@ -57,19 +56,16 @@ function createGridData(map) {
         cell.classList.add(CellTypeClass[value]);
       }
 
-      // Add arrows for visited directions
+      // Add arrows
       const directions = ['up', 'right', 'down', 'left'];
       directions.forEach(dir => {
         const arrow = document.createElement('div');
         arrow.classList.add('arrow', dir);
-  
-        // Check if this direction has been visited
-        if (visitedDirs.has(i) && visitedDirs.get(i).has(dir)) {
+
+        if (map.visitedDirs?.has(index) && map.visitedDirs.get(index).has(dir)) {
           arrow.classList.add('visited');
-        } else {
-          arrow.classList.remove('visited');
         }
-  
+
         cell.appendChild(arrow);
       });
 
@@ -78,11 +74,13 @@ function createGridData(map) {
   }
 }
 
+// Visualize the map
 function visualiseMap(map) {
   createGridData(map);
   setupGridStyles(map);
 }
 
+// Create a map
 async function createMap(width, height) {
   const stepMode = document.getElementById('debugStep').checked;
 
@@ -90,16 +88,13 @@ async function createMap(width, height) {
     onStep: stepMode
       ? async (map) => {
           visualiseMap(map);
-          // Could slow it down with requestAnimationFrame or setTimeout
-          //await new Promise(r => setTimeout(r, 5));
           await new Promise(requestAnimationFrame);
         }
       : null
   });
 
-  if (!stepMode) {
-    visualiseMap(map);
-  }
+  if (!stepMode) visualiseMap(map);
+
   return map;
 }
 
@@ -110,6 +105,7 @@ let map;
   map = await createMap(initialWidth, initialHeight);
 })();
 
+// Generate button
 generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
@@ -120,8 +116,7 @@ generateBtn.addEventListener('click', async () => {
   }
 });
 
+// Update grid size on window resize
 window.addEventListener('resize', () => {
-  if (map) {
-    setupGridStyles(map);
-  }
+  if (map) setupGridStyles(map);
 });
