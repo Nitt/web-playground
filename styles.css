@@ -94,12 +94,13 @@ body, html {
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 10% 20% 10%; /* bigger triangle */
+  border-width: 0 15% 30% 15%; /* much bigger */
   border-color: transparent transparent #000 transparent;
-  opacity: 0.2; /* faint by default */
-  top: 0;        /* start at top, we'll adjust with translate */
+  opacity: 0.2;
+  top: 50%;
   left: 50%;
-  transform-origin: 50% 0; /* rotate around tip */
+  transform-origin: 50% 50%; /* rotate around center */
+  transform: translate(-50%, -50%) rotate(0deg); /* center in cell */
 }
 
 .arrow.visited {
@@ -107,7 +108,7 @@ body, html {
 }
 
 /* Direction modifiers */
-.arrow.up    { transform: translateX(-50%) rotate(0deg); }
-.arrow.right { transform: translateX(-50%) rotate(90deg); }
-.arrow.down  { transform: translateX(-50%) rotate(180deg); }
-.arrow.left  { transform: translateX(-50%) rotate(-90deg); }
+.arrow.up    { transform: translate(-50%, -50%) rotate(0deg); }
+.arrow.right { transform: translate(-50%, -50%) rotate(90deg); }
+.arrow.down  { transform: translate(-50%, -50%) rotate(180deg); }
+.arrow.left  { transform: translate(-50%, -50%) rotate(-90deg); }
