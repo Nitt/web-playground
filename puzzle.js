@@ -18,7 +18,7 @@ const Likelihoods = {
   sticky: 0.06,
   block: 0.1,
   oneway: 0.02,
-  teleporter: 0.01,
+  teleporter: 0,
   empty: 1,
 };
 
