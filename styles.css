@@ -34,9 +34,19 @@ body, html {
 }
 
 .cell.UNTOUCHED {
-  background-color: #dad;
+  background-color: #eee; /* same as empty */
   border-color: #ccc;
+  
+  /* diagonal lines pattern */
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 8px
+  );
 }
+
 
 .cell.EMPTY {
   background-color: #eee;
