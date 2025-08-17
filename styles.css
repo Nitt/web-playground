@@ -89,47 +89,25 @@ body, html {
 }
 
 /* arrows */
-.cell .arrow {
+.arrow {
   position: absolute;
   width: 0;
   height: 0;
   border-style: solid;
-  opacity: 0; /* faint by default */
-}
-
-.cell .arrow.visited {
-  opacity: 1; /* fully visible when visited */
-}
-
-/* Arrow positions */
-.arrow.up {
-  top: 5%;
+  border-width: 0 10% 20% 10%; /* bigger triangle */
+  border-color: transparent transparent #000 transparent;
+  opacity: 0.2; /* faint by default */
+  top: 0;        /* start at top, we'll adjust with translate */
   left: 50%;
-  transform: translateX(-50%);
-  border-width: 0 5% 10% 5%;
-  border-color: transparent transparent #000 transparent;
+  transform-origin: 50% 0; /* rotate around tip */
 }
 
-.arrow.right {
-  top: 50%;
-  right: 5%;
-  transform: translateY(-50%) rotate(90deg);
-  border-width: 0 5% 10% 5%;
-  border-color: transparent transparent #000 transparent;
+.arrow.visited {
+  opacity: 1;
 }
 
-.arrow.down {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-  border-width: 0 5% 10% 5%;
-  border-color: transparent transparent #000 transparent;
-}
-
-.arrow.left {
-  top: 50%;
-  left: 5%;
-  transform: translateY(-50%) rotate(-90deg);
-  border-width: 0 5% 10% 5%;
-  border-color: transparent transparent #000 transparent;
-}
+/* Direction modifiers */
+.arrow.up    { transform: translateX(-50%) rotate(0deg); }
+.arrow.right { transform: translateX(-50%) rotate(90deg); }
+.arrow.down  { transform: translateX(-50%) rotate(180deg); }
+.arrow.left  { transform: translateX(-50%) rotate(-90deg); }
