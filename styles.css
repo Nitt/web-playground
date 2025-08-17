@@ -94,7 +94,7 @@ body, html {
   width: 0;
   height: 0;
   border-style: solid;
-  opacity: 0.3; /* faint by default */
+  opacity: 0; /* faint by default */
 }
 
 .cell .arrow.visited {
@@ -103,33 +103,33 @@ body, html {
 
 /* Arrow positions */
 .arrow.up {
-  top: 2px;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 5% 10% 5%;
   border-color: transparent transparent #000 transparent;
 }
 
 .arrow.right {
   top: 50%;
-  right: 2px;
+  right: 5%;
   transform: translateY(-50%) rotate(90deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 5% 10% 5%;
   border-color: transparent transparent #000 transparent;
 }
 
 .arrow.down {
-  bottom: 2px;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 5% 10% 5%;
   border-color: transparent transparent #000 transparent;
 }
 
 .arrow.left {
   top: 50%;
-  left: 2px;
+  left: 5%;
   transform: translateY(-50%) rotate(-90deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 5% 10% 5%;
   border-color: transparent transparent #000 transparent;
 }
