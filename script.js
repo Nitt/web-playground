@@ -67,6 +67,7 @@ function createGridData(map) {
         if (map.visitedDirs?.[i]?.[dir]) {
           arrow.classList.add('visited');
         }
+        arrow.classList.add('visited'); // added for debugging
   
         cell.appendChild(arrow);
       });
