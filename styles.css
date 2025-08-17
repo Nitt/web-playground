@@ -28,7 +28,8 @@ body, html {
 }
 
 .cell {
-  background-color: #ddd;
+  position: relative;
+  background-color: #eee;
   border: 1px solid #aaa;
   border-radius: 8%;
 }
@@ -85,4 +86,50 @@ body, html {
 .cell.TELEPORTER {
   background-color: #c9f; /* purple-ish */
   border-color: #96c;
+}
+
+/* arrows */
+.cell .arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  opacity: 0.3; /* faint by default */
+}
+
+.cell .arrow.visited {
+  opacity: 1; /* fully visible when visited */
+}
+
+/* Arrow positions */
+.arrow.up {
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #000 transparent;
+}
+
+.arrow.right {
+  top: 50%;
+  right: 2px;
+  transform: translateY(-50%) rotate(90deg);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #000 transparent;
+}
+
+.arrow.down {
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #000 transparent;
+}
+
+.arrow.left {
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%) rotate(-90deg);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #000 transparent;
 }
