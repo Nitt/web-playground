@@ -64,10 +64,11 @@ function createGridData(map) {
         arrow.classList.add('arrow', dir);
   
         // Check if this direction has been visited
-        if (map.visitedDirs?.[i]?.[dir]) {
+        if (visitedDirs.has(i) && visitedDirs.get(i).has(dir)) {
           arrow.classList.add('visited');
+        } else {
+          arrow.classList.remove('visited');
         }
-        arrow.classList.add('visited'); // added for debugging
   
         cell.appendChild(arrow);
       });
