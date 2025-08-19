@@ -57,7 +57,7 @@ function createGridData(map) {
       }
 
       // Add arrows
-      const directions = ['up', 'right', 'down', 'left'];
+      const directions = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
       directions.forEach(dir => {
         const arrow = document.createElement('div');
         arrow.classList.add('arrow', dir);
