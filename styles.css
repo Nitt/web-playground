@@ -14,7 +14,6 @@ body, html {
   width: 20%;
   padding: 10px;
   background: #f0f0f0;
-  //box-sizing: border-box;
 }
 
 .grid {
@@ -127,7 +126,6 @@ body, html {
 }
 
 .cell.ONEWAY .arrow {
-  top: 10px;
-  border-width: 0 25px 40px 25px;
+  border-width: 0 15px 20px 15px;
   border-color: transparent transparent #dd8a37 transparent;
 }
