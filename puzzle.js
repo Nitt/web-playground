@@ -25,14 +25,12 @@ const Likelihoods = {
 let map;
 let branchPoints = [];
 const visitedBranchPositions = new Set();
-//const visitedDirs = new Map();
 
 export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedBranchPositions.clear();
   map.visitedDirs = new Map();
-  //map.visitedDirs.clear();
 
   const startPosition = placeStart();
   branchPoints = [startPosition];
@@ -44,8 +42,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
       await goDirection(dirKey, current, onStep);
     }
   }
-
-  //map.visitedDirs = visitedDirs;
+  
   return map;
 }
 
@@ -56,6 +53,7 @@ async function goDirection(dirKey, pos, onStep) {
 
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
+  const nextNextPos = { x: nextPos.x + dir.x, y: nextPos.y + dir.y };
 
   const currentIndex = getIndex(pos);
 
@@ -65,20 +63,33 @@ async function goDirection(dirKey, pos, onStep) {
   markVisitedDirection(currentIndex, dirKey);
 
   const nextIndex = getIndex(nextPos);
+  const nextNextIndex = getIndex(nextNextPos);
   const nextCell = map.cells[nextIndex];
+  const nextNextCell = map.cells[nextNextIndex];
 
   switch (nextCell) {
     case CellType.UNTOUCHED: { // About to add new things!
-      const placedType = placeCellTypeIfNeeded(nextIndex);
-      switch (placedType) {
+      const cellToPlace = getCellToPlace(nextIndex);
+      switch (cellToPlace) {
         case CellType.EMPTY:
+          map.cells[nextIndex] = CellType.EMPTY;
+          await goDirection(dirKey, nextPos, onStep);
+          break;
         case CellType.ONEWAY:
+          if (nextNextCell === CellType.UNTOUCHED || nextNextCell === CellType.EMPTY) {
+            map.cells[nextNextIndex] = CellType.EMPTY;
+            map.cells[nextIndex] = CellType.ONEWAY;
+          } else { // Failed to add ONEWAY. Default to EMPTY
+            map.cells[nextIndex] = CellType.EMPTY;
+          }
           await goDirection(dirKey, nextPos, onStep);
           break;
         case CellType.BLOCK:
+          map.cells[nextIndex] = CellType.BLOCK;
           addBranchPoint(pos);
           break;
         case CellType.STICKY:
+          map.cells[nextIndex] = CellType.STICKY;
           addBranchPoint(nextPos);
           break;
       }
@@ -151,20 +162,16 @@ function getIndex(pos) {
   return pos.y * map.width + pos.x;
 }
 
-function placeCellTypeIfNeeded(index) {
+function getCellToPlace(index) {
   const total = Object.values(Likelihoods).reduce((a, b) => a + b, 0);
   let r = Math.random() * total;
 
   for (const type in Likelihoods) {
     if (r < Likelihoods[type]) {
-      // TODO: check legality of placing certain types here (oneways and teleporters)
-      map.cells[index] = CellType[type.toUpperCase()];
       return CellType[type.toUpperCase()];
     }
     r -= Likelihoods[type];
   }
-  
-  map.cells[index] = CellType.EMPTY;
   return CellType.EMPTY;
 }
 
