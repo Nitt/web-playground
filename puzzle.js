@@ -31,7 +31,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedBranchPositions.clear();
-  map.visitedDirs = new map();
+  map.visitedDirs = new Map();
   //map.visitedDirs.clear();
 
   const startPosition = placeStart();
