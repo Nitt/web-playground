@@ -124,4 +124,10 @@ body, html {
   transform: translateY(-50%) rotate(-90deg);
   border-width: 0 4px 6px 4px;
   border-color: transparent transparent #1f8ee8 transparent;
-}*/
+}
+
+.cell.ONEWAY .arrow {
+  top: 10px;
+  border-width: 0 25px 40px 25px;
+  border-color: transparent transparent #dd8a37 transparent;
+}
