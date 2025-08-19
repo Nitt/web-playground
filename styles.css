@@ -106,7 +106,7 @@ body, html {
   top: 2px;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 8px 12px 8px;
   border-color: transparent transparent #000 transparent;
 }
 
@@ -114,7 +114,7 @@ body, html {
   top: 50%;
   right: 2px;
   transform: translateY(-50%) rotate(90deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 8px 12px 8px;
   border-color: transparent transparent #000 transparent;
 }
 
@@ -122,7 +122,7 @@ body, html {
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 8px 12px 8px;
   border-color: transparent transparent #000 transparent;
 }
 
@@ -130,6 +130,6 @@ body, html {
   top: 50%;
   left: 2px;
   transform: translateY(-50%) rotate(-90deg);
-  border-width: 0 4px 6px 4px;
+  border-width: 0 8px 12px 8px;
   border-color: transparent transparent #000 transparent;
 }
