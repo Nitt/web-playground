@@ -53,7 +53,6 @@ async function goDirection(dirKey, pos, onStep) {
 
   const dir = Dirs[dirKey];
   const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
-  const nextNextPos = { x: nextPos.x + dir.x, y: nextPos.y + dir.y };
 
   const currentIndex = getIndex(pos);
 
@@ -63,9 +62,7 @@ async function goDirection(dirKey, pos, onStep) {
   markVisitedDirection(currentIndex, dirKey);
 
   const nextIndex = getIndex(nextPos);
-  const nextNextIndex = getIndex(nextNextPos);
   const nextCell = map.cells[nextIndex];
-  const nextNextCell = map.cells[nextNextIndex];
 
   switch (nextCell) {
     case CellType.UNTOUCHED: { // About to add new things!
@@ -76,6 +73,10 @@ async function goDirection(dirKey, pos, onStep) {
           await goDirection(dirKey, nextPos, onStep);
           break;
         case CellType.ONEWAY:
+          const nextNextPos   = { x: nextPos.x + dir.x, y: nextPos.y + dir.y };
+          const nextNextIndex = getIndex(nextNextPos);
+          const nextNextCell  = map.cells[nextNextIndex];
+          
           if (nextNextCell === CellType.UNTOUCHED || nextNextCell === CellType.EMPTY) {
             map.cells[nextNextIndex] = CellType.EMPTY;
             map.cells[nextIndex] = CellType.ONEWAY;
