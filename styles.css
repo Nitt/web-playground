@@ -1,6 +1,6 @@
 body, html {
   margin: 0;
-  height: 100vh;
+  height: 100%;
   font-family: sans-serif;
 }
 
@@ -11,10 +11,10 @@ body, html {
 }
 
 .sidebar {
-  width: 200px;
+  width: 20%;
   padding: 10px;
   background: #f0f0f0;
-  box-sizing: border-box;
+  //box-sizing: border-box;
 }
 
 .grid {
@@ -31,6 +31,7 @@ body, html {
   position: relative;
   background-color: #eee;
   border: 1px solid #aaa;
+  border-color: #ccc;
   border-radius: 8%;
 }
 
@@ -41,17 +42,17 @@ body, html {
   /* diagonal lines pattern */
   background-image: repeating-linear-gradient(
     45deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 10%,
-    transparent 30%,
-    transparent 30%
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 5%,
+    transparent 10%,
+    transparent 15%,
+    rgba(0, 0, 0, 0.2) 20%
   );
 }
 
 
 .cell.EMPTY {
   background-color: #eee;
-  border-color: #ccc;
 }
 
 .cell.START {
@@ -61,16 +62,7 @@ body, html {
 }
 
 .cell.STICKY {
-  /* same as empty cell background */
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 8%;
-  
-  /* draw the sticky dot in the center */
   background-image: radial-gradient(circle, orange 30%, transparent 31%);
-  background-position: center;
-  background-repeat: no-repeat;
-  /*background-size: 30% 30%;*/
 }
 
 .cell.BLOCK {
@@ -88,45 +80,48 @@ body, html {
   border-color: #96c;
 }
 
-/* triangles */
+/* arrows */
 .cell .arrow {
   position: absolute;
-  width: 0;
-  height: 0;
+  width: 0px;
+  height: 0px;
   border-style: solid;
-  opacity: 0;
+  opacity: .0;
 }
 
-.cell .arrow.visited { opacity: 1; }
+.cell .arrow.visited {
+  opacity: 1;
+}
 
-/* Base triangle points “down” (border-bottom = visible 6px) */
-.arrow.up {
+/* Arrow positions */
+.arrow.UP {
   top: 2px;
-  left: calc(50% - 4px);             /* half of 8px base (4px + 4px) */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #3de700 transparent;
+}
+
+.arrow.RIGHT {
+  top: 50%;
+  right: 2px;
+  transform: translateY(-50%) rotate(90deg);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #ff0000 transparent;
+}
+
+.arrow.DOWN {
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
   border-width: 0 4px 6px 4px;
   border-color: transparent transparent #000 transparent;
 }
 
-.arrow.down {
-  bottom: 2px;
-  left: calc(50% - 4px);
-  /* flip without translate */
-  border-width: 6px 4px 0 4px;
-  border-color: #000 transparent transparent transparent;
-}
-
-.arrow.right {
-  right: 2px;
-  top: calc(50% - 3px);              /* half of 6px height */
-  /* make a right-pointing triangle directly */
-  border-width: 4px 0 4px 6px;        /* height 8px, width 6px */
-  border-color: transparent transparent transparent #000;
-}
-
-.arrow.left {
+.arrow.LEFT {
+  top: 50%;
   left: 2px;
-  top: calc(50% - 3px);
-  border-width: 4px 6px 4px 0;
-  border-color: transparent #000 transparent transparent;
-}
-
+  transform: translateY(-50%) rotate(-90deg);
+  border-width: 0 4px 6px 4px;
+  border-color: transparent transparent #1f8ee8 transparent;
+}*/
