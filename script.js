@@ -62,7 +62,8 @@ function createGridData(map) {
         const arrow = document.createElement('div');
         arrow.classList.add('arrow', dir);
 
-        if (map.visitedDirs?.has(index) && map.visitedDirs.get(index).has(dir)) {
+        //if (map.visitedDirs?.has(index) && map.visitedDirs.get(index).has(dir)) {
+        if (Math.random() < 0.5) {
           arrow.classList.add('visited');
         } else {
           arrow.classList.remove('visited');
