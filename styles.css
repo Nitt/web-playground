@@ -88,48 +88,45 @@ body, html {
   border-color: #96c;
 }
 
-/* arrows */
+/* triangles */
 .cell .arrow {
   position: absolute;
   width: 0;
   height: 0;
   border-style: solid;
-  opacity: 0.0;
+  opacity: 0;
 }
 
-.cell .arrow.visited {
-  opacity: 1;
-}
+.cell .arrow.visited { opacity: 1; }
 
-/* Arrow positions */
+/* Base triangle points “down” (border-bottom = visible 6px) */
 .arrow.up {
   top: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 0 4px 6px 4px;
-  border-color: transparent transparent #000 transparent;
-}
-
-.arrow.right {
-  top: 50%;
-  right: 2px;
-  transform: translateY(-50%) rotate(90deg);
+  left: calc(50% - 4px);             /* half of 8px base (4px + 4px) */
   border-width: 0 4px 6px 4px;
   border-color: transparent transparent #000 transparent;
 }
 
 .arrow.down {
   bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-  border-width: 0 4px 6px 4px;
-  border-color: transparent transparent #000 transparent;
+  left: calc(50% - 4px);
+  /* flip without translate */
+  border-width: 6px 4px 0 4px;
+  border-color: #000 transparent transparent transparent;
+}
+
+.arrow.right {
+  right: 2px;
+  top: calc(50% - 3px);              /* half of 6px height */
+  /* make a right-pointing triangle directly */
+  border-width: 4px 0 4px 6px;        /* height 8px, width 6px */
+  border-color: transparent transparent transparent #000;
 }
 
 .arrow.left {
-  top: 50%;
   left: 2px;
-  transform: translateY(-50%) rotate(-90deg);
-  border-width: 0 4px 6px 4px;
-  border-color: transparent transparent #000 transparent;
+  top: calc(50% - 3px);
+  border-width: 4px 6px 4px 0;
+  border-color: transparent #000 transparent transparent;
 }
+
