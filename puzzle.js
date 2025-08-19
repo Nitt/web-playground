@@ -25,13 +25,14 @@ const Likelihoods = {
 let map;
 let branchPoints = [];
 const visitedBranchPositions = new Set();
-const visitedDirs = new Map();
+//const visitedDirs = new Map();
 
 export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedBranchPositions.clear();
-  visitedDirs.clear();
+  map.visitedDirs = new map();
+  //map.visitedDirs.clear();
 
   const startPosition = placeStart();
   branchPoints = [startPosition];
@@ -44,7 +45,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
     }
   }
 
-  map.visitedDirs = visitedDirs;
+  //map.visitedDirs = visitedDirs;
   return map;
 }
 
@@ -176,13 +177,13 @@ function addBranchPoint(pos) {
 }
 
 function hasVisitedDirection(index, dirKey) {
-  const set = visitedDirs.get(index);
+  const set = map.visitedDirs.get(index);
   return set ? set.has(dirKey) : false;
 }
 
 function markVisitedDirection(index, dirKey) {
-  if (!visitedDirs.has(index)) {
-    visitedDirs.set(index, new Set());
+  if (!map.visitedDirs.has(index)) {
+    map.visitedDirs.set(index, new Set());
   }
-  visitedDirs.get(index).add(dirKey);
+  map.visitedDirs.get(index).add(dirKey);
 }
