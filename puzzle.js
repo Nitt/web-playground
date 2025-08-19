@@ -44,6 +44,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
     }
   }
 
+  map.visitedDirs = visitedDirs;
   return map;
 }
 
