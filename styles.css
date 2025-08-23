@@ -158,6 +158,18 @@ body, html {
   border-color: transparent transparent #dd8a37 transparent;
 }
 
+.character {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 60%;
+  height: 60%;
+  background: #0af;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: 0 0 4px #0002;
+}
+
 @media (max-width: 800px) {
   .container {
     flex-direction: column;

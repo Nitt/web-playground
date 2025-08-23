@@ -1,4 +1,5 @@
 import { createPuzzle, CellType } from './puzzle.js';
+import { Player } from './player.js';
 
 const elements = {
   grid: document.querySelector('.grid'),
@@ -18,6 +19,7 @@ const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
 let cellElements = [];
 let arrowElements = [];
 let mapStates = [];
+let player = null;
 
 // Create grid DOM elements once per puzzle
 function createGridElements(map) {
@@ -100,6 +102,7 @@ function renderMapState(map, visitedDirs) {
       });
     }
   }
+  player?.render(cellElements, map);
 }
 
 // Render the selected step
@@ -127,6 +130,10 @@ async function generatePuzzle() {
   elements.maxStepsValue.textContent = lastStep;
 
   createGridElements(mapStates[0].map);
+  if (!player) {
+    player = new Player(() => mapStates[parseInt(elements.maxStepsInput.value)], () => renderStep(parseInt(elements.maxStepsInput.value)));
+  }
+  player.reset();
   renderStep(lastStep);
 }
 
@@ -139,6 +146,13 @@ elements.maxStepsInput.addEventListener('input', () => {
 });
 window.addEventListener('resize', () => {
   if (mapStates.length) applyGridStyles(mapStates[0].map);
+});
+window.addEventListener('keydown', (e) => {
+  if (!player) return;
+  if (e.key === 'ArrowLeft') player.move(-1, 0);
+  if (e.key === 'ArrowRight') player.move(1, 0);
+  if (e.key === 'ArrowUp') player.move(0, -1);
+  if (e.key === 'ArrowDown') player.move(0, 1);
 });
 
 // Initial load
