@@ -51,10 +51,10 @@ function applyGridStyles(map) {
   const innerWidth = map.width - 2;
   const innerHeight = map.height - 2;
 
-  // On mobile, use window.innerWidth/innerHeight for sizing
-  const isMobile = window.innerWidth <= 800;
-  const maxWidth = isMobile ? window.innerWidth : elements.grid.clientWidth * 0.9;
-  const maxHeight = isMobile ? window.innerHeight * 0.6 : elements.grid.clientHeight * 0.9;
+  // Get the actual available size for the grid
+  const gridRect = elements.grid.getBoundingClientRect();
+  const maxWidth = gridRect.width;
+  const maxHeight = gridRect.height;
 
   // Calculate cell size so grid fits without scrolling
   const cellWidth = Math.floor(maxWidth / innerWidth);
