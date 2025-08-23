@@ -18,6 +18,16 @@ body, html {
   box-sizing: border-box;
 }
 
+.sidebar-right {
+  flex-grow: 1;
+  min-width: 0;
+  padding: 10px;
+  background: #f0f0f0;
+  box-sizing: border-box;
+  /* Optionally, add a border-left for visual separation */
+  border-left: 1px solid #ddd;
+}
+
 .main {
   flex-grow: 1;
   display: flex;
@@ -29,7 +39,9 @@ body, html {
 }
 
 .grid {
-  flex: 0 0 auto; /* grid takes only the space it needs */
+  flex: 0 0 auto;
+  width: fit-content;
+  height: fit-content;
   display: grid;
   gap: 4px;
   background: white;
