@@ -24,119 +24,162 @@ const Likelihoods = {
   empty: 1,
 };
 
-let map;
-let branchPoints = [];
-let visitedDirs = new Map();
-const visitedBranchPositions = new Set();
-
+// Main puzzle generator: returns all intermediate states for step visualization
 export async function createPuzzle(width, height, { seed } = {}) {
-  if (typeof seed !== 'undefined') {
-    setRandomSeed(seed);
-  }
-  let stepCount = 0;
+  if (typeof seed !== 'undefined') setRandomSeed(seed);
+
+  let map = initMap(width, height);
+  let branchPoints = [];
+  let visitedDirs = new Map();
+  const visitedBranchPositions = new Set();
   let mapStates = [];
 
-  // Wrap onStep to record state
-  function recordStep(map, visitedDirs) {
-    // Deep copy the map and visitedDirs for each step
+  function cloneState() {
+    // Deep copy map and visitedDirs for step visualization
     mapStates.push({
-      map: JSON.parse(JSON.stringify(map)),
+      map: {
+        width: map.width,
+        height: map.height,
+        cells: [...map.cells],
+        startPos: { ...map.startPos }
+      },
       visitedDirs: new Map(Array.from(visitedDirs, ([k, v]) => [k, new Set(v)]))
     });
   }
 
-  map = initMap(width, height);
+  function getIndex(pos) {
+    return pos.y * map.width + pos.x;
+  }
+
+  function hasVisitedDirection(index, dirKey) {
+    const set = visitedDirs.get(index);
+    return set ? set.has(dirKey) : false;
+  }
+
+  function markVisitedDirection(index, dirKey) {
+    if (!visitedDirs.has(index)) {
+      visitedDirs.set(index, new Set());
+    }
+    visitedDirs.get(index).add(dirKey);
+  }
+
+  function addBranchPoint(pos) {
+    const key = `${pos.x},${pos.y}`;
+    if (!visitedBranchPositions.has(key)) {
+      visitedBranchPositions.add(key);
+      branchPoints.push(pos);
+    }
+  }
+
+  function getCellToPlace(index) {
+    const total = Object.values(Likelihoods).reduce((a, b) => a + b, 0);
+    let r = getRandom() * total;
+    for (const type in Likelihoods) {
+      if (r < Likelihoods[type]) {
+        return CellType[type.toUpperCase()];
+      }
+      r -= Likelihoods[type];
+    }
+    return CellType.EMPTY;
+  }
+
+  function placeStart() {
+    const innerWidth = map.width - 2;
+    const innerHeight = map.height - 2;
+    const startPosition = {
+      x: 1 + Math.floor(getRandom() * innerWidth),
+      y: 1 + Math.floor(getRandom() * innerHeight),
+    };
+    const startIndex = getIndex(startPosition);
+    map.cells[startIndex] = CellType.EMPTY;
+    map.startPos = startPosition;
+    return startPosition;
+  }
+
+  async function goDirection(dirKey, pos) {
+    cloneState();
+
+    const dir = Dirs[dirKey];
+    const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
+    const currentIndex = getIndex(pos);
+
+    if (hasVisitedDirection(currentIndex, dirKey)) return;
+    markVisitedDirection(currentIndex, dirKey);
+
+    const nextIndex = getIndex(nextPos);
+    const nextCell = map.cells[nextIndex];
+
+    switch (nextCell) {
+      case CellType.UNTOUCHED: {
+        const cellToPlace = getCellToPlace(nextIndex);
+        switch (cellToPlace) {
+          case CellType.EMPTY:
+            map.cells[nextIndex] = CellType.EMPTY;
+            await goDirection(dirKey, nextPos);
+            break;
+          case CellType.ONEWAY: {
+            const nextNextPos = { x: nextPos.x + dir.x, y: nextPos.y + dir.y };
+            const nextNextIndex = getIndex(nextNextPos);
+            const nextNextCell = map.cells[nextNextIndex];
+            if (nextNextCell === CellType.UNTOUCHED || nextNextCell === CellType.EMPTY) {
+              map.cells[nextNextIndex] = CellType.EMPTY;
+              map.cells[nextIndex] = CellType.ONEWAY;
+            } else {
+              map.cells[nextIndex] = CellType.EMPTY;
+            }
+            await goDirection(dirKey, nextPos);
+            break;
+          }
+          case CellType.BLOCK:
+            map.cells[nextIndex] = CellType.BLOCK;
+            addBranchPoint(pos);
+            break;
+          case CellType.STICKY:
+            map.cells[nextIndex] = CellType.STICKY;
+            addBranchPoint(nextPos);
+            break;
+        }
+        break;
+      }
+      case CellType.EMPTY:
+        if (!hasVisitedDirection(nextIndex, dirKey)) {
+          await goDirection(dirKey, nextPos);
+        }
+        break;
+      case CellType.BLOCK:
+        addBranchPoint(pos);
+        break;
+      case CellType.STICKY:
+        addBranchPoint(nextPos);
+        break;
+      case CellType.ONEWAY:
+        addBranchPoint(pos);
+        break;
+    }
+  }
+
+  // Initialize map and start generation
   branchPoints.length = 0;
   visitedDirs.clear();
   visitedBranchPositions.clear();
-
+  map = initMap(width, height);
   const startPosition = placeStart();
   branchPoints = [startPosition];
 
   while (branchPoints.length > 0) {
     const current = branchPoints.shift();
-
     for (const dirKey of Object.keys(Dirs)) {
-      await goDirection(dirKey, current, recordStep);
+      await goDirection(dirKey, current);
     }
   }
+
+  // Final state
+  cloneState();
 
   return { mapStates };
 }
 
-async function goDirection(dirKey, pos, onStep) {
-  if (onStep) {
-    await onStep(map, visitedDirs);
-  }
-
-  const dir = Dirs[dirKey];
-  const nextPos = { x: pos.x + dir.x, y: pos.y + dir.y };
-
-  const currentIndex = getIndex(pos);
-
-  if (hasVisitedDirection(currentIndex, dirKey)) {
-    return;
-  }
-  markVisitedDirection(currentIndex, dirKey);
-
-  const nextIndex = getIndex(nextPos);
-  const nextCell = map.cells[nextIndex];
-
-  switch (nextCell) {
-    case CellType.UNTOUCHED: { // About to add new things!
-      const cellToPlace = getCellToPlace(nextIndex);
-      switch (cellToPlace) {
-        case CellType.EMPTY:
-          map.cells[nextIndex] = CellType.EMPTY;
-          await goDirection(dirKey, nextPos, onStep);
-          break;
-        case CellType.ONEWAY:
-          const nextNextPos   = { x: nextPos.x + dir.x, y: nextPos.y + dir.y };
-          const nextNextIndex = getIndex(nextNextPos);
-          const nextNextCell  = map.cells[nextNextIndex];
-          
-          if (nextNextCell === CellType.UNTOUCHED || nextNextCell === CellType.EMPTY) {
-            map.cells[nextNextIndex] = CellType.EMPTY;
-            map.cells[nextIndex] = CellType.ONEWAY;
-          } else { // Failed to add ONEWAY. Default to EMPTY
-            map.cells[nextIndex] = CellType.EMPTY;
-          }
-          await goDirection(dirKey, nextPos, onStep);
-          break;
-        case CellType.BLOCK:
-          map.cells[nextIndex] = CellType.BLOCK;
-          addBranchPoint(pos);
-          break;
-        case CellType.STICKY:
-          map.cells[nextIndex] = CellType.STICKY;
-          addBranchPoint(nextPos);
-          break;
-      }
-      break;
-    }
-
-    case CellType.EMPTY:
-      if (!hasVisitedDirection(nextIndex, dirKey)) {
-        await goDirection(dirKey, nextPos, onStep);
-      }
-      break;
-
-    case CellType.BLOCK:
-      addBranchPoint(pos);
-      break;
-
-    case CellType.STICKY:
-      addBranchPoint(nextPos);
-      break;
-      
-    case CellType.ONEWAY:
-      // No need to check for passthrough direction since we only enter in that direction when placing it (here we're colliding with one already placed)
-      // We always place oneways in the directionality we're going when first placing so we just keep track of the "visitedDirs" value of the oneway cell
-      addBranchPoint(pos);
-      break;
-  }
-}
-
+// Helper to initialize the map with borders
 function initMap(width, height) {
   const paddedWidth = width + 2;
   const paddedHeight = height + 2;
@@ -144,12 +187,12 @@ function initMap(width, height) {
 
   // Fill border with blockers
   for (let x = 0; x < paddedWidth; x++) {
-    cells[x] = CellType.BLOCK; // top row
-    cells[(paddedHeight - 1) * paddedWidth + x] = CellType.BLOCK; // bottom row
+    cells[x] = CellType.BLOCK;
+    cells[(paddedHeight - 1) * paddedWidth + x] = CellType.BLOCK;
   }
   for (let y = 0; y < paddedHeight; y++) {
-    cells[y * paddedWidth] = CellType.BLOCK; // left column
-    cells[y * paddedWidth + (paddedWidth - 1)] = CellType.BLOCK; // right column
+    cells[y * paddedWidth] = CellType.BLOCK;
+    cells[y * paddedWidth + (paddedWidth - 1)] = CellType.BLOCK;
   }
 
   return {
@@ -158,58 +201,4 @@ function initMap(width, height) {
     cells,
     startPos: null,
   };
-}
-
-function placeStart() {
-  const innerWidth = map.width - 2;
-  const innerHeight = map.height - 2;
-
-  const startPosition = {
-    x: 1 + Math.floor(getRandom() * innerWidth),
-    y: 1 + Math.floor(getRandom() * innerHeight),
-  };
-
-  const startIndex = getIndex(startPosition);
-
-  map.cells[startIndex] = CellType.EMPTY;
-  map.startPos = startPosition;
-
-  return startPosition;
-}
-
-function getIndex(pos) {
-  return pos.y * map.width + pos.x;
-}
-
-function getCellToPlace(index) {
-  const total = Object.values(Likelihoods).reduce((a, b) => a + b, 0);
-  let r = getRandom() * total;
-
-  for (const type in Likelihoods) {
-    if (r < Likelihoods[type]) {
-      return CellType[type.toUpperCase()];
-    }
-    r -= Likelihoods[type];
-  }
-  return CellType.EMPTY;
-}
-
-function addBranchPoint(pos) {
-  const key = `${pos.x},${pos.y}`;
-  if (!visitedBranchPositions.has(key)) {
-    visitedBranchPositions.add(key);
-    branchPoints.push(pos);
-  }
-}
-
-function hasVisitedDirection(index, dirKey) {
-  const set = visitedDirs.get(index);
-  return set ? set.has(dirKey) : false;
-}
-
-function markVisitedDirection(index, dirKey) {
-  if (!visitedDirs.has(index)) {
-    visitedDirs.set(index, new Set());
-  }
-  visitedDirs.get(index).add(dirKey);
 }

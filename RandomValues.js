@@ -29,8 +29,6 @@ export function getRandom() {
   return value;
 }
 
-// Reset the sequence for a given seed
 export function setRandomSeed(seed) {
-  // Use a simple hash or just modulo for demonstration
   index = Math.abs(seed) % randomValues.length;
 }
