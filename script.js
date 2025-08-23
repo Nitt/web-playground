@@ -51,14 +51,19 @@ function applyGridStyles(map) {
   const innerWidth = map.width - 2;
   const innerHeight = map.height - 2;
 
-  // Get the actual available size for the grid
+  // Get grid container size
   const gridRect = elements.grid.getBoundingClientRect();
-  const maxWidth = gridRect.width;
-  const maxHeight = gridRect.height;
 
-  // Calculate cell size so grid fits without scrolling
-  const cellWidth = Math.floor(maxWidth / innerWidth);
-  const cellHeight = Math.floor(maxHeight / innerHeight);
+  // Get gap size from CSS (default 4px)
+  const gap = 4;
+
+  // Calculate available width/height for cells (subtract total gaps)
+  const availableWidth = gridRect.width - gap * (innerWidth - 1);
+  const availableHeight = gridRect.height - gap * (innerHeight - 1);
+
+  // Calculate cell size so grid fits perfectly
+  const cellWidth = Math.floor(availableWidth / innerWidth);
+  const cellHeight = Math.floor(availableHeight / innerHeight);
   const cellSize = Math.max(20, Math.min(cellWidth, cellHeight)); // Minimum size for usability
 
   elements.grid.style.gridTemplateColumns = `repeat(${innerWidth}, ${cellSize}px)`;
