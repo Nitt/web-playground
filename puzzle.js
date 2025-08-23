@@ -24,7 +24,7 @@ const Likelihoods = {
 
 let map;
 let branchPoints = [];
-let visitedDirs;
+let visitedDirs = new Map();
 const visitedBranchPositions = new Set();
 
 export async function createPuzzle(width, height, { onStep } = {}) {
