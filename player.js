@@ -51,6 +51,35 @@ export class Player {
     this.renderStep();
   }
 
+  async animateMove(dx, dy) {
+    const mapState = this.getMapState();
+    const map = mapState.map;
+    const visitedDirs = mapState.visitedDirs;
+    let { x, y } = this.position;
+    const dirKey = DIRS[`${dx},${dy}`];
+
+    while (true) {
+      const nx = x + dx;
+      const ny = y + dy;
+      const index = ny * map.width + nx;
+      const cellType = map.cells[index];
+
+      if (cellType === CellType.BLOCK) break;
+      if (cellType === CellType.ONEWAY) {
+        const allowed = visitedDirs?.get(index)?.has(dirKey);
+        if (!allowed) break;
+      }
+
+      x = nx;
+      y = ny;
+      this.position = { x, y };
+      this.renderStep();
+      await new Promise(resolve => setTimeout(resolve, 120)); // 120ms per cell
+
+      if (cellType === CellType.STICKY) break;
+    }
+  }
+
   // Render character in the grid
   render(cellElements, map) {
     for (let i = 0; i < cellElements.length; i++) {
@@ -67,5 +96,33 @@ export class Player {
       char.className = 'character';
       cell.appendChild(char);
     }
+  }
+
+  renderAbsolute(gridElement, map) {
+    // Remove any previous player
+    let char = gridElement.querySelector('.character');
+    if (!char) {
+      char = document.createElement('div');
+      char.className = 'character';
+      gridElement.appendChild(char);
+    }
+
+    if (!this.position) return;
+
+    // Calculate cell size and position
+    const innerWidth = map.width - 2;
+    const innerHeight = map.height - 2;
+    const cellWidth = gridElement.clientWidth / innerWidth;
+    const cellHeight = gridElement.clientHeight / innerHeight;
+
+    // Position the player
+    const x = this.position.x - 1; // adjust for border
+    const y = this.position.y - 1;
+    char.style.position = 'absolute';
+    char.style.width = `${cellWidth * 0.6}px`;
+    char.style.height = `${cellHeight * 0.6}px`;
+    char.style.left = `${x * cellWidth + cellWidth * 0.2}px`;
+    char.style.top = `${y * cellHeight + cellHeight * 0.2}px`;
+    char.style.transition = 'left 0.15s, top 0.15s';
   }
 }

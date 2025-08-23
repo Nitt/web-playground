@@ -102,7 +102,7 @@ function renderMapState(map, visitedDirs) {
       });
     }
   }
-  player?.render(cellElements, map);
+  player?.renderAbsolute(elements.grid, map);
 }
 
 // Render the selected step
@@ -147,12 +147,12 @@ elements.maxStepsInput.addEventListener('input', () => {
 window.addEventListener('resize', () => {
   if (mapStates.length) applyGridStyles(mapStates[0].map);
 });
-window.addEventListener('keydown', (e) => {
+window.addEventListener('keydown', async (e) => {
   if (!player) return;
-  if (e.key === 'ArrowLeft') player.move(-1, 0);
-  if (e.key === 'ArrowRight') player.move(1, 0);
-  if (e.key === 'ArrowUp') player.move(0, -1);
-  if (e.key === 'ArrowDown') player.move(0, 1);
+  if (e.key === 'ArrowLeft') await player.animateMove(-1, 0);
+  if (e.key === 'ArrowRight') await player.animateMove(1, 0);
+  if (e.key === 'ArrowUp') await player.animateMove(0, -1);
+  if (e.key === 'ArrowDown') await player.animateMove(0, 1);
 });
 
 // Initial load
