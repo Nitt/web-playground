@@ -94,27 +94,39 @@ function visualiseMap(map, visitedDirs) {
 async function createMap(width, height, seed) {
   const stepMode = document.getElementById('debugStep').checked;
   const STEP_DELAY_MS = parseInt(speedInput.value) || 300;
-  const maxSteps = parseInt(maxStepsInput.value) || 1;
+  let maxSteps = parseInt(maxStepsInput.value) || 1;
 
   let stepCount = 0;
 
-  const {map, visitedDirs} = await createPuzzle(width, height, {
+  // Run once to get stepCount
+  const { map, visitedDirs, stepCount: realMaxSteps } = await createPuzzle(width, height, {
+    onStep: () => {}, // No visualization, just count
+    seed
+  });
+
+  // Set slider max to realMaxSteps
+  maxStepsInput.max = realMaxSteps;
+  maxStepsValue.textContent = maxStepsInput.value;
+
+  // Now run with visualization if needed
+  let currentStep = 0;
+  const { map: finalMap, visitedDirs: finalVisitedDirs } = await createPuzzle(width, height, {
     onStep: stepMode
       ? async (map, visitedDirs) => {
           visualiseMap(map, visitedDirs);
-          stepCount++;
-          if (stepCount >= maxSteps) {
-            stepCount = 0;
+          currentStep++;
+          if (currentStep >= maxSteps) {
+            currentStep = 0;
             await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
           }
         }
       : null,
-    seed    
+    seed
   });
 
-  if (!stepMode) visualiseMap(map, visitedDirs);
+  if (!stepMode) visualiseMap(finalMap, finalVisitedDirs);
 
-  return {map, visitedDirs};
+  return { map: finalMap, visitedDirs: finalVisitedDirs };
 }
 
 let map;

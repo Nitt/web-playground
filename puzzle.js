@@ -33,6 +33,17 @@ export async function createPuzzle(width, height, { onStep, seed } = {}) {
   if (typeof seed !== 'undefined') {
     setRandomSeed(seed);
   }
+  let stepCount = 0;
+
+  // Wrap onStep to count steps
+  const stepWrapper = onStep
+    ? async (map, visitedDirs) => {
+        stepCount++;
+        await onStep(map, visitedDirs);
+      }
+    : null;
+
+  // Use stepWrapper in goDirection
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedDirs.clear();
@@ -45,11 +56,11 @@ export async function createPuzzle(width, height, { onStep, seed } = {}) {
     const current = branchPoints.shift();
 
     for (const dirKey of Object.keys(Dirs)) {
-      await goDirection(dirKey, current, onStep);
+      await goDirection(dirKey, current, stepWrapper);
     }
   }
   
-  return {map, visitedDirs};
+  return { map, visitedDirs, stepCount };
 }
 
 async function goDirection(dirKey, pos, onStep) {
