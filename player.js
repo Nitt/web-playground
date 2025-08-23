@@ -11,8 +11,9 @@ export class Player {
   constructor(getMapState, renderStep, moveCallback) {
     this.getMapState = getMapState;
     this.renderStep = renderStep;
-    this.moveCallback = moveCallback; // Function to move player
+    this.moveCallback = moveCallback;
     this.position = null;
+    this.isMoving = false; // <-- Add this
   }
 
   // Initialize at start position
@@ -61,6 +62,9 @@ export class Player {
       cell.appendChild(char);
     }
 
+    // Only show D-pad buttons if not moving
+    if (this.isMoving) return;
+
     // Add D-pad buttons to valid neighboring cells
     DIRS.forEach(dir => {
       const nx = this.position.x + dir.dx;
@@ -87,6 +91,7 @@ export class Player {
   }
 
   async animateMove(dx, dy) {
+    this.isMoving = true;
     const mapState = this.getMapState();
     const map = mapState.map;
     const visitedDirs = mapState.visitedDirs;
@@ -99,27 +104,21 @@ export class Player {
       const index = ny * map.width + nx;
       const cellType = map.cells[index];
 
-      // Blocked
       if (cellType === CellType.BLOCK) break;
-
-      // ONEWAY: only pass if direction is allowed
       if (cellType === CellType.ONEWAY) {
         const allowed = visitedDirs?.get(index)?.has(dirKey);
         if (!allowed) break;
       }
 
-      // Move
       x = nx;
       y = ny;
       this.position = { x, y };
       this.renderStep();
-
-      // Wait for animation (match CSS transition duration)
       await new Promise(resolve => setTimeout(resolve, 180));
-
-      // Sticky: stop after landing
       if (cellType === CellType.STICKY) break;
     }
+    this.isMoving = false;
+    this.renderStep(); // Re-render to show D-pad buttons
   }
 
   async smoothMove(dx, dy) {
