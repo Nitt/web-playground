@@ -29,18 +29,19 @@ body, html {
 }
 
 .grid {
-  flex: 0 0 auto; /* grid takes only the space it needs */
+  flex: 0 0 auto;
   display: grid;
   gap: 4px;
   background: white;
   border: 1px solid #ccc;
   box-sizing: border-box;
   overflow: auto;
-  height: 100%;
   min-height: 0;
-  width: 100%;
+  min-width: 0;
   position: relative;
-  padding: 0; /* Remove padding for perfect fit */
+  padding: 0;
+  width: fit-content;
+  height: fit-content;
 }
 
 .slider-wrapper {
