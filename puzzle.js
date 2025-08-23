@@ -1,3 +1,5 @@
+import { getRandom, setRandomSeed } from './RandomValues.js';
+
 export const CellType = {
   UNTOUCHED: 0,
   EMPTY: 1,
@@ -27,7 +29,10 @@ let branchPoints = [];
 let visitedDirs = new Map();
 const visitedBranchPositions = new Set();
 
-export async function createPuzzle(width, height, { onStep } = {}) {
+export async function createPuzzle(width, height, { onStep, seed } = {}) {
+  if (typeof seed !== 'undefined') {
+    setRandomSeed(seed);
+  }
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedDirs.clear();
@@ -148,8 +153,8 @@ function placeStart() {
   const innerHeight = map.height - 2;
 
   const startPosition = {
-    x: 1 + Math.floor(Math.random() * innerWidth),
-    y: 1 + Math.floor(Math.random() * innerHeight),
+    x: 1 + Math.floor(getRandom() * innerWidth),
+    y: 1 + Math.floor(getRandom() * innerHeight),
   };
 
   const startIndex = getIndex(startPosition);
@@ -166,7 +171,7 @@ function getIndex(pos) {
 
 function getCellToPlace(index) {
   const total = Object.values(Likelihoods).reduce((a, b) => a + b, 0);
-  let r = Math.random() * total;
+  let r = getRandom() * total;
 
   for (const type in Likelihoods) {
     if (r < Likelihoods[type]) {

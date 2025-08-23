@@ -4,6 +4,8 @@ const grid = document.querySelector('.grid');
 const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
+const seedInput = document.getElementById('seedInput');
+const speedInput = document.getElementById('speedInput');
 
 // Map cell type values to class names
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
@@ -87,10 +89,9 @@ function visualiseMap(map, visitedDirs) {
 }
 
 // Create a map
-async function createMap(width, height) {
+async function createMap(width, height, seed) {
   const stepMode = document.getElementById('debugStep').checked;
-
-  const STEP_DELAY_MS = 300; // Adjust this value for desired speed
+  const STEP_DELAY_MS = parseInt(speedInput.value) || 300;
 
   const {map, visitedDirs} = await createPuzzle(width, height, {
     onStep: stepMode
@@ -98,7 +99,8 @@ async function createMap(width, height) {
           visualiseMap(map, visitedDirs);
           await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
         }
-      : null
+      : null,
+    seed
   });
 
   if (!stepMode) visualiseMap(map, visitedDirs);
@@ -111,15 +113,16 @@ let visitedDirs = new Map();
 (async () => {
   const initialWidth = parseInt(widthInput.value) || 10;
   const initialHeight = parseInt(heightInput.value) || 10;
-  ({map, visitedDirs} = await createMap(initialWidth, initialHeight));
+  const initialSeed = parseInt(seedInput.value) || 42;
+  ({map, visitedDirs} = await createMap(initialWidth, initialHeight, initialSeed));
 })();
 
-// Generate button
 generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
+  const seed = parseInt(seedInput.value) || 42;
   if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
-    ({map, visitedDirs} = await createMap(w, h));
+    ({map, visitedDirs} = await createMap(w, h, seed));
   } else {
     alert('Please enter valid positive integers for width and height.');
   }
