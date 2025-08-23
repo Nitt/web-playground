@@ -1,28 +1,38 @@
-<div class="container">
-  <div class="sidebar">
-    <label>
-      Width: <input type="number" id="widthInput" min="1" value="10" />
-    </label>
-    <br />
-    <label>
-      Height: <input type="number" id="heightInput" min="1" value="10" />
-    </label>
-    <br />
-    <label>
-      Seed: <input type="number" id="seedInput" value="0" />
-    </label>
-    <br />
-    <button id="generateBtn">Generate</button>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Puzzle Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+      <div class="sidebar">
+        <label>
+          Width: <input type="number" id="widthInput" min="1" value="10" />
+        </label>
+        <br />
+        <label>
+          Height: <input type="number" id="heightInput" min="1" value="10" />
+        </label>
+        <br />
+        <label>
+          Seed: <input type="number" id="seedInput" value="0" />
+        </label>
+        <br />
+        <button id="generateBtn">Generate</button>
+      </div>
 
-  <div class="main">
-    <div class="grid"></div>
-    <div class="slider-wrapper">
-      <label>
-        Generation Step: 
-        <input type="range" id="maxStepsInput" min="0" max="100" value="0" />
-        <span id="maxStepsValue">0</span>
-      </label>
+      <div class="main">
+        <div class="grid"></div>
+        <div class="slider-wrapper">
+          <label>
+            Generation Step: 
+            <input type="range" id="maxStepsInput" min="0" max="100" value="0" />
+            <span id="maxStepsValue">0</span>
+          </label>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+</html>

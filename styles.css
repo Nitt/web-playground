@@ -18,17 +18,14 @@ body, html {
 }
 
 .main {
-  flex: 1 1 auto;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  box-sizing: border-box;
+  height: 100%;
 }
 
 .grid {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex-grow: 1;
   display: grid;
   gap: 4px;
   background: white;
@@ -39,7 +36,7 @@ body, html {
 }
 
 .slider-wrapper {
-  padding: 10px;
+  padding: 10px 0;
   background: #fafafa;
   border-top: 1px solid #ddd;
   box-sizing: border-box;
