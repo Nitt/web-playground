@@ -122,6 +122,7 @@ export class Player {
   }
 
   async smoothMove(dx, dy) {
+    this.isMoving = true;
     const mapState = this.getMapState();
     const map = mapState.map;
     const visitedDirs = mapState.visitedDirs;
@@ -145,16 +146,36 @@ export class Player {
       if (cellType === CellType.STICKY) break;
     }
 
-    // Animate from (x, y) to (tx, ty)
+    // Animate from (x, y) to (tx, ty) over a fixed duration
     const steps = Math.max(Math.abs(tx - x), Math.abs(ty - y));
-    if (steps === 0) return;
+    if (steps === 0) {
+      this.isMoving = false;
+      this.renderStep();
+      return;
+    }
 
-    for (let step = 1; step <= steps; step++) {
-      const nx = x + dx * step;
-      const ny = y + dy * step;
+    const duration = 180 * steps; // ms, e.g. 180ms per cell
+    const startTime = performance.now();
+    const startX = x, startY = y;
+    const endX = tx, endY = ty;
+
+    const animate = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      // Interpolate position
+      const nx = startX + (endX - startX) * t;
+      const ny = startY + (endY - startY) * t;
       this.position = { x: nx, y: ny };
       this.renderStep();
-      await new Promise(resolve => requestAnimationFrame(resolve));
-    }
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // Snap to final cell
+        this.position = { x: endX, y: endY };
+        this.isMoving = false;
+        this.renderStep();
+      }
+    };
+    requestAnimationFrame(animate);
   }
 }

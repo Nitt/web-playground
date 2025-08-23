@@ -168,8 +168,8 @@ body, html {
   border-radius: 50%;
   z-index: 2;
   box-shadow: 0 0 4px #0002;
-  transition: transform 0.18s linear;
   will-change: transform;
+  transition: none;
 }
 
 .map-filler {
