@@ -44,22 +44,43 @@ export class Player {
 
   // Render character and D-pad in the grid
   renderWithDPad(cellElements, map) {
-    // Remove previous character and d-pad buttons
+    // Remove previous d-pad buttons from cells
     for (let i = 0; i < cellElements.length; i++) {
       const cell = cellElements[i];
       if (!cell) continue;
-      const oldChar = cell.querySelector('.character');
-      if (oldChar) cell.removeChild(oldChar);
       const oldBtn = cell.querySelector('.dpad-btn');
       if (oldBtn) cell.removeChild(oldBtn);
     }
-    if (!this.position) return;
-    const index = this.position.y * map.width + this.position.x;
-    const cell = cellElements[index];
-    if (cell) {
-      const char = document.createElement('div');
+
+    // Always render the character as a child of grid
+    const gridElement = document.querySelector('.grid');
+    let char = gridElement.querySelector('.character');
+    if (!char) {
+      char = document.createElement('div');
       char.className = 'character';
-      cell.appendChild(char);
+      gridElement.appendChild(char);
+    }
+
+    // Position the character using fractional coordinates
+    if (this.position) {
+      const innerWidth = map.width - 2;
+      const innerHeight = map.height - 2;
+      const style = window.getComputedStyle(gridElement);
+      const gapX = parseInt(style.columnGap) || 0;
+      const gapY = parseInt(style.rowGap) || 0;
+      const cellWidth = gridElement.clientWidth / innerWidth;
+      const cellHeight = gridElement.clientHeight / innerHeight;
+
+      // Calculate position including gaps
+      const x = this.position.x - 1;
+      const y = this.position.y - 1;
+      const left = x * (cellWidth + gapX) + cellWidth / 2;
+      const top = y * (cellHeight + gapY) + cellHeight / 2;
+
+      char.style.width = `${cellWidth * 0.6}px`;
+      char.style.height = `${cellHeight * 0.6}px`;
+      char.style.position = 'absolute';
+      char.style.transform = `translate(-50%, -50%) translate(${left}px, ${top}px)`;
     }
 
     // Only show D-pad buttons if not moving
@@ -67,8 +88,8 @@ export class Player {
 
     // Add D-pad buttons to valid neighboring cells
     DIRS.forEach(dir => {
-      const nx = this.position.x + dir.dx;
-      const ny = this.position.y + dir.dy;
+      const nx = Math.round(this.position.x + dir.dx);
+      const ny = Math.round(this.position.y + dir.dy);
       const nIndex = ny * map.width + nx;
       const nCell = cellElements[nIndex];
       if (!nCell) return;
