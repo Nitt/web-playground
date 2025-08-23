@@ -38,43 +38,32 @@ function setupGridStyles(map) {
   });
 }
 
-// Create all the grid cells and arrows
-function createGridData(map, visitedDirs) {
-  if (!map) return;
+let cellElements = [];
+let arrowElements = [];
 
+// Create all the grid cells and arrows
+function initGrid(map) {
   grid.innerHTML = '';
+  cellElements = [];
+  arrowElements = [];
+
   const startIndex = map.startPos.y * map.width + map.startPos.x;
 
   for (let y = 1; y <= map.height - 2; y++) {
     for (let x = 1; x <= map.width - 2; x++) {
       const index = y * map.width + x;
-      const value = map.cells[index];
-
       const cell = document.createElement('div');
       cell.classList.add('cell');
+      cellElements[index] = cell;
 
-      if (index === startIndex) {
-        cell.classList.add('START');
-      } else {
-        cell.classList.add(CellTypeClass[value]);
-      }
+      // Store arrow elements for this cell
+      arrowElements[index] = {};
 
-      // Add arrows
       const directions = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
       directions.forEach(dir => {
         const arrow = document.createElement('div');
         arrow.classList.add('arrow', dir);
-
-        console.log(index, visitedDirs?.get(index), dir);
-
-        if (visitedDirs?.has(index) && visitedDirs.get(index).has(dir)) {
-          console.log('Visited arrow', index, dir);
-          arrow.classList.add('visited');
-        } else {
-          console.log('Not visited', index, dir);
-          arrow.classList.remove('visited');
-        }
-
+        arrowElements[index][dir] = arrow;
         cell.appendChild(arrow);
       });
 
@@ -85,8 +74,25 @@ function createGridData(map, visitedDirs) {
 
 // Visualize the map
 function visualiseMap(map, visitedDirs) {
-  createGridData(map, visitedDirs);
+  initGrid(map);
   setupGridStyles(map);
+
+  const startIndex = map.startPos.y * map.width + map.startPos.x;
+
+  for (let y = 1; y <= map.height - 2; y++) {
+    for (let x = 1; x <= map.width - 2; x++) {
+      const index = y * map.width + x;
+
+      const directions = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
+      directions.forEach(dir => {
+        if (visitedDirs?.has(index) && visitedDirs.get(index).has(dir)) {
+          arrowElements[index][dir].classList.add('visited');
+        } else {
+          arrowElements[index][dir].classList.remove('visited');
+        }
+      });
+    }
+  }
 }
 
 let mapStates = [];
@@ -138,3 +144,34 @@ maxStepsInput.addEventListener('input', () => {
   const initialSeed = parseInt(seedInput.value) || 42;
   await createMap(initialWidth, initialHeight, initialSeed);
 })();
+
+function updateGrid(map, visitedDirs) {
+  const startIndex = map.startPos.y * map.width + map.startPos.x;
+
+  for (let y = 1; y <= map.height - 2; y++) {
+    for (let x = 1; x <= map.width - 2; x++) {
+      const index = y * map.width + x;
+      const value = map.cells[index];
+      const cell = cellElements[index];
+
+      // Reset cell classes
+      cell.className = 'cell';
+      if (index === startIndex) {
+        cell.classList.add('START');
+      } else {
+        cell.classList.add(CellTypeClass[value]);
+      }
+
+      // Update arrows
+      const directions = ['LEFT', 'UP', 'RIGHT', 'DOWN'];
+      directions.forEach(dir => {
+        const arrow = arrowElements[index][dir];
+        if (visitedDirs?.has(index) && visitedDirs.get(index).has(dir)) {
+          arrow.classList.add('visited');
+        } else {
+          arrow.classList.remove('visited');
+        }
+      });
+    }
+  }
+}
