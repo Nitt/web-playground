@@ -29,21 +29,22 @@ let branchPoints = [];
 let visitedDirs = new Map();
 const visitedBranchPositions = new Set();
 
-export async function createPuzzle(width, height, { onStep, seed } = {}) {
+export async function createPuzzle(width, height, { seed } = {}) {
   if (typeof seed !== 'undefined') {
     setRandomSeed(seed);
   }
   let stepCount = 0;
+  let mapStates = [];
 
-  // Wrap onStep to count steps
-  const stepWrapper = onStep
-    ? async (map, visitedDirs) => {
-        stepCount++;
-        await onStep(map, visitedDirs);
-      }
-    : null;
+  // Wrap onStep to record state
+  function recordStep(map, visitedDirs) {
+    // Deep copy the map and visitedDirs for each step
+    mapStates.push({
+      map: JSON.parse(JSON.stringify(map)),
+      visitedDirs: new Map(Array.from(visitedDirs, ([k, v]) => [k, new Set(v)]))
+    });
+  }
 
-  // Use stepWrapper in goDirection
   map = initMap(width, height);
   branchPoints.length = 0;
   visitedDirs.clear();
@@ -56,11 +57,11 @@ export async function createPuzzle(width, height, { onStep, seed } = {}) {
     const current = branchPoints.shift();
 
     for (const dirKey of Object.keys(Dirs)) {
-      await goDirection(dirKey, current, stepWrapper);
+      await goDirection(dirKey, current, recordStep);
     }
   }
-  
-  return { map, visitedDirs, stepCount };
+
+  return { mapStates };
 }
 
 async function goDirection(dirKey, pos, onStep) {

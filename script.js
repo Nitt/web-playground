@@ -90,60 +90,33 @@ function visualiseMap(map, visitedDirs) {
   setupGridStyles(map);
 }
 
-// Create a map
+let mapStates = [];
+
 async function createMap(width, height, seed) {
-  const stepMode = document.getElementById('debugStep').checked;
-  const STEP_DELAY_MS = parseInt(speedInput.value) || 300;
-  let maxSteps = parseInt(maxStepsInput.value) || 1;
+  const { mapStates: generatedStates } = await createPuzzle(width, height, { seed });
+  mapStates = generatedStates;
 
-  let stepCount = 0;
-
-  // Run once to get stepCount
-  const { map, visitedDirs, stepCount: realMaxSteps } = await createPuzzle(width, height, {
-    onStep: () => {}, // No visualization, just count
-    seed
-  });
-
-  // Set slider max to realMaxSteps
-  maxStepsInput.max = realMaxSteps;
+  // Set slider max to number of steps
+  maxStepsInput.max = mapStates.length - 1;
   maxStepsValue.textContent = maxStepsInput.value;
 
-  // Now run with visualization if needed
-  let currentStep = 0;
-  const { map: finalMap, visitedDirs: finalVisitedDirs } = await createPuzzle(width, height, {
-    onStep: stepMode
-      ? async (map, visitedDirs) => {
-          visualiseMap(map, visitedDirs);
-          currentStep++;
-          if (currentStep >= maxSteps) {
-            currentStep = 0;
-            await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
-          }
-        }
-      : null,
-    seed
-  });
-
-  if (!stepMode) visualiseMap(finalMap, finalVisitedDirs);
-
-  return { map: finalMap, visitedDirs: finalVisitedDirs };
+  // Show initial state
+  showStep(parseInt(maxStepsInput.value) || 0);
 }
 
-let map;
-let visitedDirs = new Map();
-(async () => {
-  const initialWidth = parseInt(widthInput.value) || 10;
-  const initialHeight = parseInt(heightInput.value) || 10;
-  const initialSeed = parseInt(seedInput.value) || 42;
-  ({map, visitedDirs} = await createMap(initialWidth, initialHeight, initialSeed));
-})();
+function showStep(step) {
+  const state = mapStates[step];
+  if (state) {
+    visualiseMap(state.map, state.visitedDirs);
+  }
+}
 
 generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
   const seed = parseInt(seedInput.value) || 42;
   if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
-    ({map, visitedDirs} = await createMap(w, h, seed));
+    await createMap(w, h, seed);
   } else {
     alert('Please enter valid positive integers for width and height.');
   }
@@ -157,4 +130,12 @@ window.addEventListener('resize', () => {
 // Update label when slider changes
 maxStepsInput.addEventListener('input', () => {
   maxStepsValue.textContent = maxStepsInput.value;
+  showStep(parseInt(maxStepsInput.value));
 });
+
+(async () => {
+  const initialWidth = parseInt(widthInput.value) || 10;
+  const initialHeight = parseInt(heightInput.value) || 10;
+  const initialSeed = parseInt(seedInput.value) || 42;
+  await createMap(initialWidth, initialHeight, initialSeed);
+})();
