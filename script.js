@@ -101,6 +101,7 @@ function renderStep(step) {
 
 // Generate a new puzzle and initialize grid
 async function generatePuzzle() {
+  console.log('Generating puzzle...');
   const width = parseInt(elements.widthInput.value) || 10;
   const height = parseInt(elements.heightInput.value) || 10;
   const seed = parseInt(elements.seedInput.value) || 0;W
@@ -114,7 +115,7 @@ async function generatePuzzle() {
 
 // Event listeners
 elements.generateBtn.addEventListener('click', generatePuzzle);
-elements.seedInput.addEventListener('input', generatePuzzle);
+//elements.seedInput.addEventListener('input', generatePuzzle);
 elements.maxStepsInput.addEventListener('input', () => {
   elements.maxStepsValue.textContent = elements.maxStepsInput.value;
   renderStep(parseInt(elements.maxStepsInput.value));
