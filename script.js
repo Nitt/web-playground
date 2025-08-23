@@ -5,6 +5,9 @@ const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 
+let map;
+let visitedDirs = new Map();
+
 // Map cell type values to class names
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
   acc[CellType[key]] = key;
@@ -106,8 +109,6 @@ async function createMap(width, height) {
   return {map, visitedDirs};
 }
 
-let map;
-let visitedDirs = new Map();
 (async () => {
   const initialWidth = parseInt(widthInput.value) || 10;
   const initialHeight = parseInt(heightInput.value) || 10;
