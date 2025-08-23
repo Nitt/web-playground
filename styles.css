@@ -18,13 +18,6 @@ body, html {
   box-sizing: border-box;
 }
 
-.sidebar-right {
-  width: 20%;
-  padding: 10px;
-  background: #f0f0f0;
-  box-sizing: border-box;
-}
-
 .main {
   flex-grow: 1;
   display: flex;
