@@ -103,18 +103,18 @@ function renderStep(step) {
 async function generatePuzzle() {
   const width = parseInt(elements.widthInput.value) || 10;
   const height = parseInt(elements.heightInput.value) || 10;
-  const seed = parseInt(elements.seedInput.value) || 42;
+  const seed = parseInt(elements.seedInput.value) || 0;W
   const { mapStates: generatedStates } = await createPuzzle(width, height, { seed });
   mapStates = generatedStates;
   elements.maxStepsInput.max = mapStates.length - 1;
-  elements.maxStepsValue.textContent = elements.maxStepsInput.value;
-  elements.maxStepsInput.value = elements.maxStepsInput.value;
+  elements.maxStepsValue.textContent = elements.maxStepsInput.max;
   createGridElements(mapStates[0].map);
   renderStep(parseInt(elements.maxStepsInput.value) || 0);
 }
 
 // Event listeners
 elements.generateBtn.addEventListener('click', generatePuzzle);
+elements.seedInput.addEventListener('input', generatePuzzle);
 elements.maxStepsInput.addEventListener('input', () => {
   elements.maxStepsValue.textContent = elements.maxStepsInput.value;
   renderStep(parseInt(elements.maxStepsInput.value));
