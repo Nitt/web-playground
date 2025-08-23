@@ -40,6 +40,24 @@ body, html {
   background: #fafafa;
   border-top: 1px solid #ddd;
   box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-wrapper label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#maxStepsInput {
+  flex-grow: 1;
+  width: 100%;
+  min-width: 200px;
+  max-width: 600px;
 }
 
 .cell {

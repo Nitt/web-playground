@@ -107,10 +107,15 @@ async function generatePuzzle() {
   const seed = parseInt(elements.seedInput.value) || 0;
   const { mapStates: generatedStates } = await createPuzzle(width, height, { seed });
   mapStates = generatedStates;
-  elements.maxStepsInput.max = mapStates.length - 1;
-  elements.maxStepsValue.textContent = elements.maxStepsInput.max;
+
+  // Set slider max and value to the last step
+  const lastStep = mapStates.length - 1;
+  elements.maxStepsInput.max = lastStep;
+  elements.maxStepsInput.value = lastStep;
+  elements.maxStepsValue.textContent = lastStep;
+
   createGridElements(mapStates[0].map);
-  renderStep(parseInt(elements.maxStepsInput.value) || 0);
+  renderStep(lastStep);
 }
 
 // Event listeners
