@@ -159,15 +159,14 @@ body, html {
 
 .character {
   position: absolute;
-  top: 50%; left: 50%;
   width: 60%;
   height: 60%;
   background: #0af;
   border-radius: 50%;
   z-index: 2;
-  transition: left 0.15s, top 0.15s;
   box-shadow: 0 0 4px #0002;
-  transform: translate(-50%, -50%);
+  transition: transform 0.18s linear;
+  will-change: transform;
 }
 
 @media (max-width: 800px) {

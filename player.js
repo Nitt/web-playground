@@ -74,7 +74,7 @@ export class Player {
       y = ny;
       this.position = { x, y };
       this.renderStep();
-      await new Promise(resolve => setTimeout(resolve, 120)); // 120ms per cell
+      await new Promise(resolve => setTimeout(resolve, 180)); // Match transition duration
 
       if (cellType === CellType.STICKY) break;
     }
@@ -107,6 +107,7 @@ export class Player {
     }
     if (!this.position) return;
 
+    // Calculate cell size and position
     const innerWidth = map.width - 2;
     const innerHeight = map.height - 2;
     const style = window.getComputedStyle(gridElement);
@@ -118,11 +119,13 @@ export class Player {
     // Calculate position including gaps
     const x = this.position.x - 1;
     const y = this.position.y - 1;
+    const left = x * (cellWidth + gapX) + cellWidth / 2;
+    const top = y * (cellHeight + gapY) + cellHeight / 2;
+
     char.style.width = `${cellWidth * 0.6}px`;
     char.style.height = `${cellHeight * 0.6}px`;
-    char.style.left = `${x * (cellWidth + gapX) + cellWidth / 2}px`;
-    char.style.top = `${y * (cellHeight + gapY) + cellHeight / 2}px`;
-    char.style.transition = 'left 0.15s, top 0.15s';
-    char.style.transform = 'translate(-50%, -50%)';
+    char.style.position = 'absolute';
+    char.style.transition = 'transform 0.18s linear';
+    char.style.transform = `translate(-50%, -50%) translate(${left}px, ${top}px)`;
   }
 }
