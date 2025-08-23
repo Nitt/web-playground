@@ -48,7 +48,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
 
 async function goDirection(dirKey, pos, onStep) {
   if (onStep) {
-    await onStep(map);
+    await onStep(map, visitedDirs);
   }
 
   const dir = Dirs[dirKey];
