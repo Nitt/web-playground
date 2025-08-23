@@ -108,6 +108,7 @@ async function generatePuzzle() {
   mapStates = generatedStates;
   elements.maxStepsInput.max = mapStates.length - 1;
   elements.maxStepsValue.textContent = elements.maxStepsInput.value;
+  elements.maxStepsInput.value = elements.maxStepsInput.value;
   createGridElements(mapStates[0].map);
   renderStep(parseInt(elements.maxStepsInput.value) || 0);
 }
