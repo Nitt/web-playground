@@ -178,6 +178,31 @@ body, html {
   background: transparent; /* or a color if you want a divider */
 }
 
+.dpad-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  width: 80%;
+  height: 80%;
+  min-width: 44px;
+  min-height: 44px;
+  background: #fff;
+  border: 2px solid #0af;
+  border-radius: 50%;
+  z-index: 3;
+  box-shadow: 0 2px 8px #0002;
+  opacity: 0.85;
+  cursor: pointer;
+  transition: background 0.2s;
+  touch-action: manipulation;
+}
+
+.dpad-btn:active {
+  background: #e0f0ff;
+}
+
 @media (max-width: 800px) {
   .container {
     flex-direction: column;

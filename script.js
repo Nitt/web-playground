@@ -102,7 +102,7 @@ function renderMapState(map, visitedDirs) {
       });
     }
   }
-  player?.renderAbsolute(elements.grid, map);
+  player?.renderWithDPad(cellElements, map);
 }
 
 // Render the selected step
@@ -131,7 +131,11 @@ async function generatePuzzle() {
 
   createGridElements(mapStates[0].map);
   if (!player) {
-    player = new Player(() => mapStates[parseInt(elements.maxStepsInput.value)], () => renderStep(parseInt(elements.maxStepsInput.value)));
+    player = new Player(
+      () => mapStates[parseInt(elements.maxStepsInput.value)],
+      () => renderStep(parseInt(elements.maxStepsInput.value)),
+      async (dx, dy) => await player.animateMove(dx, dy)
+    );
   }
   player.reset();
   renderStep(lastStep);
