@@ -6,6 +6,8 @@ const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 const seedInput = document.getElementById('seedInput');
 const speedInput = document.getElementById('speedInput');
+const maxStepsInput = document.getElementById('maxStepsInput');
+const maxStepsValue = document.getElementById('maxStepsValue');
 
 // Map cell type values to class names
 const CellTypeClass = Object.keys(CellType).reduce((acc, key) => {
@@ -92,15 +94,22 @@ function visualiseMap(map, visitedDirs) {
 async function createMap(width, height, seed) {
   const stepMode = document.getElementById('debugStep').checked;
   const STEP_DELAY_MS = parseInt(speedInput.value) || 300;
+  const maxSteps = parseInt(maxStepsInput.value) || 1;
+
+  let stepCount = 0;
 
   const {map, visitedDirs} = await createPuzzle(width, height, {
     onStep: stepMode
       ? async (map, visitedDirs) => {
           visualiseMap(map, visitedDirs);
-          await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
+          stepCount++;
+          if (stepCount >= maxSteps) {
+            stepCount = 0;
+            await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
+          }
         }
       : null,
-    seed
+    seed    
   });
 
   if (!stepMode) visualiseMap(map, visitedDirs);
@@ -131,4 +140,9 @@ generateBtn.addEventListener('click', async () => {
 // Update grid size on window resize
 window.addEventListener('resize', () => {
   if (map) setupGridStyles(map, visitedDirs);
+});
+
+// Update label when slider changes
+maxStepsInput.addEventListener('input', () => {
+  maxStepsValue.textContent = maxStepsInput.value;
 });
