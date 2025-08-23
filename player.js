@@ -75,10 +75,12 @@ export class Player {
         btn.setAttribute('aria-label', dir.key);
         btn.addEventListener('click', e => {
           e.stopPropagation();
+          console.log('D-pad button clicked', dir.key);
           this.moveCallback(dir.dx, dir.dy);
         }, { once: true });
         btn.addEventListener('touchstart', e => {
           e.stopPropagation();
+          console.log('D-pad button touched', dir.key);
           this.moveCallback(dir.dx, dir.dy);
         }, { once: true });
         nCell.appendChild(btn);
