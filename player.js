@@ -55,6 +55,7 @@ export class Player {
   render(cellElements, map) {
     for (let i = 0; i < cellElements.length; i++) {
       const cell = cellElements[i];
+      if (!cell) continue;
       const oldChar = cell.querySelector('.character');
       if (oldChar) cell.removeChild(oldChar);
     }
