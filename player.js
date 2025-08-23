@@ -89,14 +89,36 @@ export class Player {
   async animateMove(dx, dy) {
     const mapState = this.getMapState();
     const map = mapState.map;
-    const { x, y } = this.position;
-    const nx = x + dx;
-    const ny = y + dy;
-    const index = ny * map.width + nx;
-    const cellType = map.cells[index];
-    if (cellType === CellType.BLOCK) return false;
-    this.position = { x: nx, y: ny };
-    this.renderStep();
-    return true;
+    const visitedDirs = mapState.visitedDirs;
+    let { x, y } = this.position;
+    const dirKey = DIRS.find(d => d.dx === dx && d.dy === dy).key;
+
+    while (true) {
+      const nx = x + dx;
+      const ny = y + dy;
+      const index = ny * map.width + nx;
+      const cellType = map.cells[index];
+
+      // Blocked
+      if (cellType === CellType.BLOCK) break;
+
+      // ONEWAY: only pass if direction is allowed
+      if (cellType === CellType.ONEWAY) {
+        const allowed = visitedDirs?.get(index)?.has(dirKey);
+        if (!allowed) break;
+      }
+
+      // Move
+      x = nx;
+      y = ny;
+      this.position = { x, y };
+      this.renderStep();
+
+      // Wait for animation (match CSS transition duration)
+      await new Promise(resolve => setTimeout(resolve, 180));
+
+      // Sticky: stop after landing
+      if (cellType === CellType.STICKY) break;
+    }
   }
 }
