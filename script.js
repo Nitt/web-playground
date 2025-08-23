@@ -134,7 +134,7 @@ async function generatePuzzle() {
     player = new Player(
       () => mapStates[parseInt(elements.maxStepsInput.value)],
       () => renderStep(parseInt(elements.maxStepsInput.value)),
-      async (dx, dy) => await player.animateMove(dx, dy)
+      async (dx, dy) => await player.smoothMove(dx, dy)
     );
   }
   player.reset();
@@ -153,10 +153,10 @@ window.addEventListener('resize', () => {
 });
 window.addEventListener('keydown', async (e) => {
   if (!player) return;
-  if (e.key === 'ArrowLeft') await player.animateMove(-1, 0);
-  if (e.key === 'ArrowRight') await player.animateMove(1, 0);
-  if (e.key === 'ArrowUp') await player.animateMove(0, -1);
-  if (e.key === 'ArrowDown') await player.animateMove(0, 1);
+  if (e.key === 'ArrowLeft') await player.smoothMove(-1, 0);
+  if (e.key === 'ArrowRight') await player.smoothMove(1, 0);
+  if (e.key === 'ArrowUp') await player.smoothMove(0, -1);
+  if (e.key === 'ArrowDown') await player.smoothMove(0, 1);
 });
 
 // Initial load

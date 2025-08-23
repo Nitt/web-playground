@@ -121,4 +121,41 @@ export class Player {
       if (cellType === CellType.STICKY) break;
     }
   }
+
+  async smoothMove(dx, dy) {
+    const mapState = this.getMapState();
+    const map = mapState.map;
+    const visitedDirs = mapState.visitedDirs;
+    let { x, y } = this.position;
+    const dirKey = DIRS.find(d => d.dx === dx && d.dy === dy).key;
+
+    // Find the final destination (slide until blocked/sticky)
+    let tx = x, ty = y;
+    while (true) {
+      const nx = tx + dx;
+      const ny = ty + dy;
+      const index = ny * map.width + nx;
+      const cellType = map.cells[index];
+      if (cellType === CellType.BLOCK) break;
+      if (cellType === CellType.ONEWAY) {
+        const allowed = visitedDirs?.get(index)?.has(dirKey);
+        if (!allowed) break;
+      }
+      tx = nx;
+      ty = ny;
+      if (cellType === CellType.STICKY) break;
+    }
+
+    // Animate from (x, y) to (tx, ty)
+    const steps = Math.max(Math.abs(tx - x), Math.abs(ty - y));
+    if (steps === 0) return;
+
+    for (let step = 1; step <= steps; step++) {
+      const nx = x + dx * step;
+      const ny = y + dy * step;
+      this.position = { x: nx, y: ny };
+      this.renderStep();
+      await new Promise(resolve => requestAnimationFrame(resolve));
+    }
+  }
 }
