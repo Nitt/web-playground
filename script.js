@@ -5,7 +5,6 @@ const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const generateBtn = document.getElementById('generateBtn');
 const seedInput = document.getElementById('seedInput');
-const speedInput = document.getElementById('speedInput');
 const maxStepsInput = document.getElementById('maxStepsInput');
 const maxStepsValue = document.getElementById('maxStepsValue');
 
