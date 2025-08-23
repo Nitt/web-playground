@@ -5,37 +5,44 @@ body, html {
 }
 
 .container {
-  overflow: hidden;
   display: flex;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
   width: 20%;
   padding: 10px;
   background: #f0f0f0;
+  box-sizing: border-box;
 }
 
 .main {
-  flex-grow: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 .grid {
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   gap: 4px;
   background: white;
   border: 1px solid #ccc;
   padding: 10px;
   overflow: auto;
+  box-sizing: border-box;
 }
 
 .slider-wrapper {
   padding: 10px;
   background: #fafafa;
   border-top: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 .cell {
@@ -50,7 +57,6 @@ body, html {
   background-color: #e1e1e1; /* same as empty */
   border-color: #ccc;
 }
-
 
 .cell.EMPTY {
   background-color: #eee;
