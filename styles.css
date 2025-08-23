@@ -19,7 +19,10 @@ body, html {
 }
 
 .sidebar-right {
-  /* Same as left sidebar, but you can customize if needed */
+  width: 20%;
+  padding: 10px;
+  background: #f0f0f0;
+  box-sizing: border-box;
 }
 
 .main {
