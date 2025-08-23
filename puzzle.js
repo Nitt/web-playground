@@ -30,6 +30,7 @@ const visitedBranchPositions = new Set();
 export async function createPuzzle(width, height, { onStep } = {}) {
   map = initMap(width, height);
   branchPoints.length = 0;
+  visitedDirs.clear();
   visitedBranchPositions.clear();
 
   const startPosition = placeStart();
@@ -48,7 +49,7 @@ export async function createPuzzle(width, height, { onStep } = {}) {
 
 async function goDirection(dirKey, pos, onStep) {
   if (onStep) {
-    await onStep(map, visitedDirs);
+    await x, visitedDirs);
   }
 
   const dir = Dirs[dirKey];
