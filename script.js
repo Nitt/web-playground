@@ -62,9 +62,9 @@ function createGridData(map) {
         const arrow = document.createElement('div');
         arrow.classList.add('arrow', dir);
 
-        console.log(index, map.visitedDirs?.get(index), dir);
+        console.log(index, visitedDirs?.get(index), dir);
 
-        if (map.visitedDirs?.has(index) && map.visitedDirs.get(index).has(dir)) {
+        if (visitedDirs?.has(index) && visitedDirs.get(index).has(dir)) {
           console.log('Visited arrow', index, dir);
           arrow.classList.add('visited');
         } else {
@@ -90,11 +90,13 @@ function visualiseMap(map) {
 async function createMap(width, height) {
   const stepMode = document.getElementById('debugStep').checked;
 
-  const map = await createPuzzle(width, height, {
+  const STEP_DELAY_MS = 300; // Adjust this value for desired speed
+
+  const {map, visitedDirs} = await createPuzzle(width, height, {
     onStep: stepMode
       ? async (map) => {
           visualiseMap(map);
-          await new Promise(requestAnimationFrame);
+          await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
         }
       : null
   });
