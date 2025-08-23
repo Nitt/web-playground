@@ -99,30 +99,30 @@ export class Player {
   }
 
   renderAbsolute(gridElement, map) {
-    // Remove any previous player
     let char = gridElement.querySelector('.character');
     if (!char) {
       char = document.createElement('div');
       char.className = 'character';
       gridElement.appendChild(char);
     }
-
     if (!this.position) return;
 
-    // Calculate cell size and position
     const innerWidth = map.width - 2;
     const innerHeight = map.height - 2;
+    const style = window.getComputedStyle(gridElement);
+    const gapX = parseInt(style.columnGap) || 0;
+    const gapY = parseInt(style.rowGap) || 0;
     const cellWidth = gridElement.clientWidth / innerWidth;
     const cellHeight = gridElement.clientHeight / innerHeight;
 
-    // Position the player
-    const x = this.position.x - 1; // adjust for border
+    // Calculate position including gaps
+    const x = this.position.x - 1;
     const y = this.position.y - 1;
-    char.style.position = 'absolute';
     char.style.width = `${cellWidth * 0.6}px`;
     char.style.height = `${cellHeight * 0.6}px`;
-    char.style.left = `${x * cellWidth + cellWidth * 0.2}px`;
-    char.style.top = `${y * cellHeight + cellHeight * 0.2}px`;
+    char.style.left = `${x * (cellWidth + gapX) + cellWidth / 2}px`;
+    char.style.top = `${y * (cellHeight + gapY) + cellHeight / 2}px`;
     char.style.transition = 'left 0.15s, top 0.15s';
+    char.style.transform = 'translate(-50%, -50%)';
   }
 }

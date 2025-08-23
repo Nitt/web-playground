@@ -31,12 +31,12 @@ body, html {
   gap: 4px;
   background: white;
   border: 1px solid #ccc;
-  padding: 10px;
   box-sizing: border-box;
   overflow: auto;
-  height: 0;     /* Let flexbox control height */
-  min-height: 0; /* Prevent flex overflow */
-  position: relative; /* Needed for absolute positioning */
+  height: 0;
+  min-height: 0;
+  position: relative;
+  padding: 0; /* Remove padding for perfect fit */
 }
 
 .slider-wrapper {
