@@ -75,16 +75,28 @@ export class Player {
         btn.setAttribute('aria-label', dir.key);
         btn.addEventListener('click', e => {
           e.stopPropagation();
-          console.log('D-pad button clicked', dir.key);
           this.moveCallback(dir.dx, dir.dy);
         }, { once: true });
         btn.addEventListener('touchstart', e => {
           e.stopPropagation();
-          console.log('D-pad button touched', dir.key);
           this.moveCallback(dir.dx, dir.dy);
         }, { once: true });
         nCell.appendChild(btn);
       }
     });
+  }
+
+  async animateMove(dx, dy) {
+    const mapState = this.getMapState();
+    const map = mapState.map;
+    const { x, y } = this.position;
+    const nx = x + dx;
+    const ny = y + dy;
+    const index = ny * map.width + nx;
+    const cellType = map.cells[index];
+    if (cellType === CellType.BLOCK) return false;
+    this.position = { x: nx, y: ny };
+    this.renderStep();
+    return true;
   }
 }
