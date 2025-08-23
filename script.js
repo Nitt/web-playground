@@ -54,12 +54,14 @@ function applyGridStyles(map) {
   // Get grid container size
   const gridRect = elements.grid.getBoundingClientRect();
 
-  // Get gap size from CSS (default 4px)
-  const gap = 4;
+  // Get gap size from CSS dynamically
+  const style = window.getComputedStyle(elements.grid);
+  const gapX = parseInt(style.columnGap) || 0;
+  const gapY = parseInt(style.rowGap) || 0;
 
   // Calculate available width/height for cells (subtract total gaps)
-  const availableWidth = gridRect.width - gap * (innerWidth - 1);
-  const availableHeight = gridRect.height - gap * (innerHeight - 1);
+  const availableWidth = gridRect.width - gapX * (innerWidth - 1);
+  const availableHeight = gridRect.height - gapY * (innerHeight - 1);
 
   // Calculate cell size so grid fits perfectly
   const cellWidth = Math.floor(availableWidth / innerWidth);
