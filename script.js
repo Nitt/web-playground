@@ -50,12 +50,17 @@ function applyGridStyles(map) {
   if (!map) return;
   const innerWidth = map.width - 2;
   const innerHeight = map.height - 2;
-  // Use Math.min to avoid making cells too big on mobile
-  const maxWidth = elements.grid.clientWidth || window.innerWidth;
-  const maxHeight = elements.grid.clientHeight || window.innerHeight;
+
+  // On mobile, use window.innerWidth/innerHeight for sizing
+  const isMobile = window.innerWidth <= 800;
+  const maxWidth = isMobile ? window.innerWidth : elements.grid.clientWidth * 0.9;
+  const maxHeight = isMobile ? window.innerHeight * 0.6 : elements.grid.clientHeight * 0.9;
+
+  // Calculate cell size so grid fits without scrolling
   const cellWidth = Math.floor(maxWidth / innerWidth);
   const cellHeight = Math.floor(maxHeight / innerHeight);
-  const cellSize = Math.max(20, Math.min(cellWidth, cellHeight)); // Minimum cell size for usability
+  const cellSize = Math.max(20, Math.min(cellWidth, cellHeight)); // Minimum size for usability
+
   elements.grid.style.gridTemplateColumns = `repeat(${innerWidth}, ${cellSize}px)`;
   elements.grid.style.gridTemplateRows = `repeat(${innerHeight}, ${cellSize}px)`;
   elements.grid.querySelectorAll('.cell').forEach(cell => {

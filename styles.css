@@ -172,9 +172,8 @@ body, html {
     min-width: 0;
     max-width: 100vw;
     max-height: 60vh;
-    overflow-x: auto;
-    overflow-y: auto;
-    padding: 4px;
+    overflow: hidden; /* Remove scrollbars */
+    padding: 0;       /* Remove extra padding */
   }
   .slider-wrapper {
     width: 100%;
