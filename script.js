@@ -36,7 +36,7 @@ function setupGridStyles(map) {
 }
 
 // Create all the grid cells and arrows
-function createGridData(map) {
+function createGridData(map, visitedDirs) {
   if (!map) return;
 
   grid.innerHTML = '';
@@ -81,8 +81,8 @@ function createGridData(map) {
 }
 
 // Visualize the map
-function visualiseMap(map) {
-  createGridData(map);
+function visualiseMap(map, visitedDirs) {
+  createGridData(map, visitedDirs);
   setupGridStyles(map);
 }
 
@@ -95,22 +95,23 @@ async function createMap(width, height) {
   const {map, visitedDirs} = await createPuzzle(width, height, {
     onStep: stepMode
       ? async (map) => {
-          visualiseMap(map);
+          visualiseMap(map, visitedDirs);
           await new Promise(resolve => setTimeout(resolve, STEP_DELAY_MS));
         }
       : null
   });
 
-  if (!stepMode) visualiseMap(map);
+  if (!stepMode) visualiseMap(map, visitedDirs);
 
-  return map;
+  return {map, visitedDirs};
 }
 
 let map;
+let visitedDirs = new Map();
 (async () => {
   const initialWidth = parseInt(widthInput.value) || 10;
   const initialHeight = parseInt(heightInput.value) || 10;
-  map = await createMap(initialWidth, initialHeight);
+  ({map, visitedDirs} = await createMap(initialWidth, initialHeight));
 })();
 
 // Generate button
@@ -118,7 +119,7 @@ generateBtn.addEventListener('click', async () => {
   const w = parseInt(widthInput.value);
   const h = parseInt(heightInput.value);
   if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
-    map = await createMap(w, h);
+    ({map, visitedDirs} = await createMap(w, h));
   } else {
     alert('Please enter valid positive integers for width and height.');
   }
@@ -126,5 +127,5 @@ generateBtn.addEventListener('click', async () => {
 
 // Update grid size on window resize
 window.addEventListener('resize', () => {
-  if (map) setupGridStyles(map);
+  if (map) setupGridStyles(map, visitedDirs);
 });
